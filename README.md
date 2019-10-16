@@ -6,4 +6,5 @@
 本项目是一个移动端项目,采用[Vant框架](https://youzan.github.io/vant/#/zh-CN/intro),当然还有许多的移动端框架可以选择。这个就看自己或者团队了.
 
 ## **本项目刚刚开发中,请敬请期待！**
+
 ![](https://blog-1259178461.cos.ap-chengdu.myqcloud.com/vue-music/pkq.jpeg)
