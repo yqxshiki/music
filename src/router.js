@@ -9,6 +9,9 @@ export default new Router({
         { path: "/header", component: () => import("./components/Header.vue") },
         { path: "/footer", component: () => import("./components/Footer.vue") },
         { path: "/sheet", component: () => import("./components/Gedan/Sheet.vue") },
-        { path: "/sheet/:id", component: () => import("./components/Gedan/sheetdetails.vue") }
+        { path: "/sheet/:id", component: () => import("./components/Gedan/sheetdetails.vue") },
+        { path: "/search", component: () => import("./components/Search.vue") },
+        { path: "/search/:vaule", component: () => import("./components/Display.vue") }
+
     ]
 })

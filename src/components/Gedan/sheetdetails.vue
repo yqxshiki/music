@@ -1,9 +1,14 @@
 <template>
   <div id="sheetid">
     <div class="wrap">
-      <van-nav-bar title="歌单" left-arrow>
-        <van-icon name="search" slot="right" />
-      </van-nav-bar>
+      <van-nav-bar
+        title="歌单"
+        left-text="返回"
+        right-text="搜索"
+        left-arrow
+        @click-left="onClickLeft"
+        @click-right="onClickRight"
+      />
       <!-- 图片描述 -->
       <div class="gedan">
         <img :src="details.coverImgUrl" alt />
@@ -81,7 +86,7 @@ export default {
     // 音乐url
     getsongurl(id) {
       this.axios.get("/song/url?id=" + id).then(res => {
-        console.log(res);
+        // console.log(res);
         this.audio = res.data.data[0];
       });
     },
@@ -98,6 +103,14 @@ export default {
         audio.pause();
         this.key = 0;
       }
+    },
+    // 返回
+    onClickLeft() {
+      this.$router.go(-1);
+    },
+    // 搜索
+    onClickRight() {
+      this.$router.push("/search")
     }
   },
   mounted() {
@@ -148,7 +161,9 @@ export default {
 }
 /* 歌曲 */
 .song {
-  margin: 1rem;
+  margin-top: 1rem;
+  width: 100%;
+  background: linear-gradient(right, skyblue, rgb(201, 131, 131));
 }
 .play {
   font-size: 0.8rem;
@@ -157,8 +172,16 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
   height: 2rem;
   margin: 1rem;
+}
+.list:hover{
+  background: #fff;
+}
+.van-icon {
+  color: #000;
+  flex: 2;
 }
 .id {
   flex: 2;
