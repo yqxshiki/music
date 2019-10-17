@@ -1,13 +1,20 @@
 <template>
   <div id="appheader">
-    <div class="icon">
-      <van-icon name="wap-nav" />
+    <div class="flex">
+      <div class="icon">
+        <van-icon name="wap-nav" />
+      </div>
+      <div class="wrap">
+        <van-row>
+          <van-col span="8">新曲</van-col>
+          <router-link to="/sheet">
+            <van-col span="8">歌单</van-col>
+          </router-link>
+          <van-col span="8">排行榜</van-col>
+        </van-row>
+      </div>
     </div>
-    <div class="wrap">
-      <van-tabs v-model="active" animated>
-        <van-tab v-for="(item,index) in tab" :title="item.title" :key="index">{{item.content}}</van-tab>
-      </van-tabs>
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -16,18 +23,13 @@ export default {
   name: "appheader",
   data() {
     return {
-      active: 1,
-      tab: [
-        { title: "我的", content: "我的1" },
-        { title: "发现", content: "发现1" },
-        { title: "视频", content: "视频1" }
-      ]
+      active: 1
     };
   }
 };
 </script>
 <style scoped>
-#appheader {
+.flex {
   display: flex;
   justify-content: space-around;
 }
