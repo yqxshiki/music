@@ -8,10 +8,16 @@ export default new Router({
     routes: [
         { path: "/header", component: () => import("./components/Header.vue") },
         { path: "/footer", component: () => import("./components/Footer.vue") },
+        { path: "/sidebar", component: () => import("./components/Sidebar.vue") },
+        { path: "/about", component: () => import("./components/About.vue") },
         { path: "/sheet", component: () => import("./components/Gedan/Sheet.vue") },
         { path: "/sheet/:id", component: () => import("./components/Gedan/sheetdetails.vue") },
         { path: "/search", component: () => import("./components/Search.vue") },
-        { path: "/search/:vaule", component: () => import("./components/Display.vue") }
+        { path: "/search/:vaule", component: () => import("./components/Display.vue") },
+        { path: "/error", component: () => import("./components/Error.vue") },
+        { path: "/ranking", component: () => import("./components/Ranking/Ranking.vue") },
+        { path: "/ranking/:id", component: () => import("./components/Ranking/Rankdetail.vue") },
+        { path: "*", redirect: "/error" }
 
     ]
 })

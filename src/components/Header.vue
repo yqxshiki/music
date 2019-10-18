@@ -2,7 +2,12 @@
   <div id="appheader">
     <div class="flex">
       <div class="icon">
-        <van-icon name="wap-nav" />
+        <van-cell @click="showPopup">
+          <van-icon name="wap-nav" />
+        </van-cell>
+        <van-popup v-model="show" round position="left" :style="{ width: '80%',height:'100%'}">
+          <sidebar />
+        </van-popup>
       </div>
       <div class="wrap">
         <van-row>
@@ -10,7 +15,9 @@
           <router-link to="/sheet">
             <van-col span="8">歌单</van-col>
           </router-link>
-          <van-col span="8">排行榜</van-col>
+          <router-link to="/ranking">
+            <van-col span="8">排行榜</van-col>
+          </router-link>
         </van-row>
       </div>
     </div>
@@ -19,12 +26,22 @@
 </template>
 
 <script>
+import sidebar from "./Sidebar";
 export default {
   name: "appheader",
+  components: {
+    sidebar
+  },
   data() {
     return {
-      active: 1
+      active: 1,
+      show: false
     };
+  },
+  methods: {
+    showPopup() {
+      this.show = true;
+    }
   }
 };
 </script>
@@ -38,6 +55,7 @@ export default {
 }
 .wrap {
   flex: 8;
+  line-height: 3rem;
 }
 .icon i {
   font-size: 2rem;

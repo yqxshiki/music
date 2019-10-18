@@ -110,7 +110,7 @@ export default {
     },
     // 搜索
     onClickRight() {
-      this.$router.push("/search")
+      this.$router.push("/search");
     }
   },
   mounted() {
@@ -140,25 +140,6 @@ export default {
 .iconwenzi {
   font-size: 0.6rem;
 }
-@font-face {
-  font-family: "iconfont"; /* project id 1462857 */
-  src: url("//at.alicdn.com/t/font_1462857_f8a67uylg6.eot");
-  src: url("//at.alicdn.com/t/font_1462857_f8a67uylg6.eot?#iefix")
-      format("embedded-opentype"),
-    url("//at.alicdn.com/t/font_1462857_f8a67uylg6.woff2") format("woff2"),
-    url("//at.alicdn.com/t/font_1462857_f8a67uylg6.woff") format("woff"),
-    url("//at.alicdn.com/t/font_1462857_f8a67uylg6.ttf") format("truetype"),
-    url("//at.alicdn.com/t/font_1462857_f8a67uylg6.svg#iconfont") format("svg");
-}
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 1.6rem;
-  font-style: normal;
-  color: #000;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.2px;
-  -moz-osx-font-smoothing: grayscale;
-}
 /* 歌曲 */
 .song {
   margin-top: 1rem;
@@ -176,7 +157,7 @@ export default {
   height: 2rem;
   margin: 1rem;
 }
-.list:hover{
+.list:hover {
   background: #fff;
 }
 .van-icon {
