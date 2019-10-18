@@ -29,7 +29,6 @@ export default {
     return {
       songarr: [],
       vaule: "",
-      key: 0,
       audio: []
     };
   },
@@ -69,15 +68,14 @@ export default {
     playaudio(id) {
       this.getsongurl(id);
       let audio = document.getElementsByClassName("audio")[0];
-      this.key++;
-      // 播放
-      if ((this.key = 1)) {
-        audio.play();
-      }
-      // 暂停
-      if (this.key == 2) {
-        audio.pause();
-        this.key = 0;
+      if (audio !== null) {
+        //检测播放是否已暂停.audio.paused 在播放器播放时返回false.
+        console.log(audio.paused);
+        if (audio.paused) {
+          audio.play(); //audio.play();// 这个就是播放
+        } else {
+          audio.pause(); // 这个就是暂停
+        }
       }
     }
   },
