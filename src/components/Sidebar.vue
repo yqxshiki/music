@@ -25,10 +25,14 @@
       </div>
     </div>
     <div class="nav">
-      <div class="user">用户信息</div>
+      <router-link to="/user">
+        <div class="user">用户信息</div>
+      </router-link>
       <div class="tool">工具</div>
       <div class="Scan" @click="nohave">扫一扫</div>
-      <div class="about">关于我们</div>
+      <router-link to="/about">
+        <div class="about">关于我们</div>
+      </router-link>
       <div class="setting">设置</div>
     </div>
     <footer>

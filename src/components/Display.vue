@@ -73,8 +73,12 @@ export default {
         console.log(audio.paused);
         if (audio.paused) {
           audio.play(); //audio.play();// 这个就是播放
+          this.$notify({ type: "success", message: "开始播放" });
+
         } else {
           audio.pause(); // 这个就是暂停
+          this.$notify({ type: "danger", message: "停止播放" });
+
         }
       }
     }

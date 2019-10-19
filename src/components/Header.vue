@@ -5,13 +5,15 @@
         <van-cell @click="showPopup">
           <van-icon name="wap-nav" />
         </van-cell>
-        <van-popup v-model="show" round position="left" :style="{ width: '80%',height:'100%'}">
+        <van-popup v-model="show" round position="left" :style="{ width: '70%',height:'100%'}">
           <sidebar />
         </van-popup>
       </div>
       <div class="wrap">
         <van-row>
-          <van-col span="8">新曲</van-col>
+          <router-link to="/navigation">
+            <van-col span="8">新曲</van-col>
+          </router-link>
           <router-link to="/sheet">
             <van-col span="8">歌单</van-col>
           </router-link>
