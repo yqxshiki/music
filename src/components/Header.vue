@@ -9,21 +9,29 @@
           <sidebar />
         </van-popup>
       </div>
-      <div class="wrap">
-        <van-row>
-          <router-link to="/navigation">
-            <van-col span="8">新曲</van-col>
-          </router-link>
-          <router-link to="/sheet">
-            <van-col span="8">歌单</van-col>
-          </router-link>
-          <router-link to="/ranking">
-            <van-col span="8">排行榜</van-col>
-          </router-link>
-        </van-row>
+      <div class="title">VUE-MUSIC</div>
+      <div class="icon">
+        <router-link to="/search">
+          <van-icon name="search" />
+        </router-link>
       </div>
     </div>
-    <router-view></router-view>
+    <div class="wrap">
+      <van-row>
+        <router-link to="/sheet" tag="div">
+          <van-col>推荐</van-col>
+        </router-link>
+        <router-link to="/ranking" tag="div">
+          <van-col>排行榜</van-col>
+        </router-link>
+        <router-link to="/singer" tag="div">
+          <van-col>歌手</van-col>
+        </router-link>
+      </van-row>
+    </div>
+    <div class="cover">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -49,18 +57,42 @@ export default {
 </script>
 <style scoped>
 .flex {
+  width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
+  background: rgb(210, 69, 55);
 }
-.icon {
-  flex: 2;
-}
-.wrap {
-  flex: 8;
-  line-height: 3rem;
+.icon .van-cell {
+  background: rgb(210, 69, 55);
 }
 .icon i {
   font-size: 2rem;
   cursor: pointer;
+}
+.title {
+  font-weight: 600;
+  color: #ffffff;
+}
+.wrap {
+  width: 100%;
+  background: rgb(210, 69, 55);
+  font-size: 0.8rem;
+  height: 2rem;
+}
+.van-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  color: #ffffff;
+}
+.van-row div {
+  margin-left: 1.5rem;
+}
+
+.cover {
+  height: 100vh;
+  width: 100%;
+  margin-top: 3rem;
 }
 </style>

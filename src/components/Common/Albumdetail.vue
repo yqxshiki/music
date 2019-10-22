@@ -1,48 +1,45 @@
 <template>
-  <div id="detail">
+  <div id="albumdetail">
     <div class="loading" v-show="isloading">
       <van-loading type="spinner" color="#1989fa" />
       <div class="jiazai">加载中</div>
     </div>
     <div class="show" v-show="isshow">
-      <van-nav-bar left-arrow :left-text="title" @click-left="onClickLeft" />
+      <van-nav-bar left-arrow left-text="专辑" @click-left="onClickLeft" />
       <!-- 图片描述 -->
       <div class="gedan">
-        <img v-lazy="details.coverImgUrl" alt />
+        <img v-lazy="album.blurPicUrl" alt />
       </div>
+      <div class="description">{{album.name}}</div>
+      <div class="singer">{{artist.name}}</div>
+    </div>
 
-      <div class="description">{{details.name}}</div>
-      <div class="playcount">
-        <van-icon name="service-o" />
-        播放量：{{details.playCount}}
-      </div>
-      <!-- 歌曲 -->
-      <div class="song">
-        <van-row type="flex" justify="space-between">
-          <van-col span="18">
-            <div class="play">
-              <span>播放全部</span>
-              <span>(共{{details.trackCount}}首)</span>
-            </div>
-          </van-col>
-          <van-col span="6">
-            <van-icon name="bar-chart-o" />
-          </van-col>
-        </van-row>
-
-        <div class="list" v-for="(item,index) in song" :key="index">
-          <div class="id">{{index+1}}</div>
-
-          <div class="dansong" @click="playaudio(item.id)">
-            <audio class="audio" :src="audio.url"></audio>
-            <div class="name">{{item.name}}</div>
-            <div class="songer">{{item.ar[0].name}}--{{item.al.name}}</div>
+    <!-- 歌曲 -->
+    <div class="song">
+      <van-row type="flex" justify="space-between">
+        <van-col span="18">
+          <div class="play">
+            <span>播放全部</span>
+            <span>(共{{songs.length}}首)</span>
           </div>
-          <div class="meun">
-            <router-link :to="'/songdetail/'+item.id">
-              <van-icon name="ellipsis" class="ellipsis" />
-            </router-link>
-          </div>
+        </van-col>
+        <van-col span="6">
+          <van-icon name="bar-chart-o" />
+        </van-col>
+      </van-row>
+
+      <div class="list" v-for="(item,index) in songs" :key="index">
+        <div class="id">{{index+1}}</div>
+
+        <div class="dansong" @click="playaudio(item.id)">
+          <audio class="audio" :src="audio.url"></audio>
+          <div class="name">{{item.name}}</div>
+          <div class="songer">{{item.ar[0].name}}--{{item.al.name}}</div>
+        </div>
+        <div class="meun">
+          <router-link :to="'/songdetail/'+item.id">
+            <van-icon name="ellipsis" class="ellipsis" />
+          </router-link>
         </div>
       </div>
     </div>
@@ -51,19 +48,18 @@
 
 <script>
 export default {
-  name: "detail",
+  name: "albumdetail",
   data() {
     return {
-      details: [],
-      song: [],
+      album: [],
+      artist: "",
+      songs: [],
       audio: [],
-      songarr: [],
       i: 0,
       isshow: false,
       isloading: true
     };
   },
-  props: ["title"],
   methods: {
     // 歌单详情
     getdetails(id) {
@@ -116,8 +112,8 @@ export default {
     // 音乐url
     getsongurl(id) {
       this.axios.get("/song/url?id=" + id).then(res => {
-        // console.log(res);
         this.audio = res.data.data[0];
+        // console.log(res);
       });
       this.getword(id);
     },
@@ -136,6 +132,13 @@ export default {
         }
       }
     },
+    getalbum(id) {
+      this.axios.get("/album?id=" + id).then(res => {
+        this.album = res.data.album;
+        this.artist = this.album.artist;
+        this.songs = res.data.songs;
+      });
+    },
     // 返回
     onClickLeft() {
       this.$router.go(-1);
@@ -149,15 +152,9 @@ export default {
       }
     }
   },
-  computed: {
-    showcurrent() {
-      return (this.word = this.songarr[this.i].words);
-      console.log(this.word);
-    }
-  },
   mounted() {
-    this.getdetails(this.$route.params.id);
-    if (this.details == "") {
+    this.getalbum(this.$route.params.id);
+    if (this.album == "") {
       setInterval(() => {
         this.onload();
       });
@@ -207,14 +204,6 @@ span {
   width: 100%;
   height: 15rem;
 }
-.playcount {
-  color: #fff;
-  font-size: 0.4rem;
-}
-.playcount i {
-  color: #fff;
-  font-size: 0.8rem;
-}
 .description {
   width: 100%;
   word-wrap: break-word;
@@ -222,15 +211,10 @@ span {
   font-size: 1rem;
   font-weight: 700;
   color: #fff;
-  margin-top: -4rem;
+  margin-top: -3rem;
 }
-/* icon */
-.operation {
-  display: flex;
-  justify-content: space-around;
-}
-.iconwenzi {
-  font-size: 0.6rem;
+.singer {
+  color: #fff;
 }
 /* 歌曲 */
 .song {
@@ -248,7 +232,7 @@ span {
   font-weight: 700;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
-.play span{
+.play span {
   color: #000;
 }
 .van-icon-bar-chart-o {

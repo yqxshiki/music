@@ -12,12 +12,8 @@
 </template>
 
 <script>
-import detail from "./Detail";
 export default {
   name: "navigation",
-  components: {
-    detail
-  },
   props: ["title", "search"],
   methods: {
     // 返回

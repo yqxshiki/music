@@ -1,12 +1,12 @@
 <template>
   <div id="user">
-    <navigation :title="message" :search="search"/>
+    <navigation :title="message" :search="search" />
     <div class="gedan">收藏的歌单</div>
     <div class="user" v-for="(item,index) in userarr" :key="index">
       <div class="wrap">
         <router-link :to="'/sheet/'+item.id">
           <div class="img">
-            <img :src="item.coverImgUrl" alt />
+            <img v-lazy="item.coverImgUrl" />
           </div>
         </router-link>
         <div class="message">
@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       message: "个人信息",
-      search:"",
+      search: "",
       userarr: []
     };
   },

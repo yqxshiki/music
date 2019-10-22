@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "core-js": "^3.1.2",
+    "lyric-parser": "^1.0.1",
     "vant": "^2.2.7",
     "vue": "^2.6.10",
     "vue-router": "^3.1.3"

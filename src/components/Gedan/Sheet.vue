@@ -1,6 +1,13 @@
 <template>
   <div id="sheet">
-    <div class="title">全部歌单</div>
+    <div class="pic">
+      <van-swipe :autoplay="3000">
+        <van-swipe-item v-for="(image, index) in pic" :key="index">
+          <img v-lazy="image.pic" />
+        </van-swipe-item>
+      </van-swipe>
+    </div>
+    <div class="title">推荐歌单</div>
     <div class="wrap">
       <div class="list" v-for="(item,index) in sheetarray" :key="index">
         <div class="img">
@@ -10,7 +17,7 @@
             {{item.playCount}}
           </div>
           <router-link :to="'/sheet/'+item.id">
-            <img :src="item.coverImgUrl" alt />
+            <img v-lazy="item.coverImgUrl" />
           </router-link>
           <div class="describe">{{item.name}}</div>
         </div>
@@ -24,6 +31,7 @@ export default {
   name: "sheet",
   data() {
     return {
+      pic: [],
       sheetarray: []
     };
   },
@@ -33,20 +41,40 @@ export default {
         // console.log(res.data);
         this.sheetarray = res.data.playlists;
       });
+    },
+    getpic() {
+      this.axios.get("/banner?type=1").then(res => {
+        // console.log(res);
+        this.pic = res.data.banners;
+      });
     }
   },
   mounted() {
     this.getsheet();
+    this.getpic();
   }
 };
 </script>
 <style scoped>
+/* 轮播图 */
+.pic {
+  margin-top: -55px;
+  background: rgb(210, 69, 55);
+  height: 10rem;
+}
+.pic img {
+  width: 85%;
+  height: 9rem;
+  margin-top: 1rem;
+  margin-left: 1.5rem;
+}
 .title {
   font-size: 1rem;
   border-left: 4px solid red;
   margin: 1rem;
+  font-weight: bolder;
+  text-indent: 1rem;
 }
-
 /* 歌单 */
 .wrap {
   display: flex;
@@ -54,13 +82,13 @@ export default {
   flex-wrap: wrap;
 }
 .list {
-  width: 50%;
+  width: 40%;
 }
 .img {
   position: relative;
 }
 .img img {
-  width: 9rem;
+  width: 8rem;
   margin: 0.6rem;
 }
 /* 描述 */
@@ -76,5 +104,8 @@ export default {
   right: 20px;
   top: 10px;
   color: #ffffff;
+}
+.count img {
+  border-radius: 1rem;
 }
 </style>

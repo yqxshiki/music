@@ -6,12 +6,14 @@ import router from './router'
 // axios
 import axios from 'axios'
 Vue.prototype.axios = axios;
-axios.defaults.baseURL = "http://localhost:3000"
+axios.defaults.baseURL = "http://localhost:3000";
 
 // 引入Vant
 import Vant from 'vant'
 import 'vant/lib/index.css';
+import { Lazyload } from 'vant';
 Vue.use(Vant)
+Vue.use(Lazyload);
 
 Vue.config.productionTip = false
 

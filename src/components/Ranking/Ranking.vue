@@ -1,11 +1,10 @@
 <template>
   <div id="ranking">
-    <van-nav-bar title="排行榜" left-text="返回" left-arrow @click-left="onClickLeft" />
     <div class="content">
       <div class="wrap" v-for="(item,index) in rankarr" :key="index">
         <router-link :to="'/ranking/'+item.id">
           <div class="img">
-            <img :src="item.coverImgUrl" alt />
+            <img v-lazy="item.coverImgUrl" />
             <div class="title">{{item.updateFrequency}}</div>
           </div>
         </router-link>
@@ -30,9 +29,6 @@ export default {
         this.rankarr = res.data.list;
         // console.log(this.rankarr);
       });
-    },
-    onClickLeft() {
-      this.$router.go(-1);
     }
   },
   mounted() {
@@ -49,6 +45,7 @@ export default {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+  margin-top: -2rem;
 }
 .wrap {
   width: 50%;
