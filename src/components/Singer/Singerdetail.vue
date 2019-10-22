@@ -13,6 +13,9 @@
       <div class="title">{{details.name}}</div>
       <div class="wrap">
         <van-tabs animated swipeable>
+          <van-tab title="主页">
+            <resolve />
+          </van-tab>
           <van-tab title="歌曲">
             <hotsong :gid="gid" />
           </van-tab>
@@ -36,13 +39,15 @@ import personaldetail from "./Singerdetail/Personaldetail";
 import hotsong from "./Singerdetail/Hotsong";
 import album from "./Singerdetail/Album";
 import mv from "./Singerdetail/Mv";
+import resolve from "./Singerdetail/Resolve";
 export default {
   name: "songerdetail",
   components: {
     personaldetail,
     mv,
     album,
-    hotsong
+    hotsong,
+    resolve
   },
   data() {
     return {

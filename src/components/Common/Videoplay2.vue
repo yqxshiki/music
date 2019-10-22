@@ -1,6 +1,6 @@
 <template>
   <div id="videoplay">
-    <van-nav-bar left-arrow left-text="视频" @click-left="onClickLeft" />
+    <navigation :title="title" />
     <div class="wrap">
       <div class="video">
         <video :src="resources[1080]" controls preload="auto"></video>
@@ -25,10 +25,16 @@
 </template>
 
 <script>
+import navigation from "./Navigation";
+
 export default {
-  name: "videoplay",
+  name: "videoplay2",
+  components: {
+    navigation
+  },
   data() {
     return {
+      title: "视频",
       video: [],
       commonmv: [],
       resources: ""
@@ -44,12 +50,8 @@ export default {
     getcommonmv(id) {
       this.axios.get("/simi/mv?mvid=" + id).then(res => {
         this.commonmv = res.data.mvs;
-        console.log(this.commonmv);
+        // console.log(this.commonmv);
       });
-    },
-    // 返回
-    onClickLeft() {
-      this.$router.go(-1);
     }
   },
   mounted() {

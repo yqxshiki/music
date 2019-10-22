@@ -1,17 +1,15 @@
 <template>
   <div id="search">
-    <form action="/">
-      <router-link :to="'/search/'+this.value">
-        <van-search
-          v-model="value"
-          placeholder="请输入搜索关键词"
-          show-action
-          @search="onSearch"
-          @cancel="onCancel"
-        />
-      </router-link>
+    <navigation :title="title" />
+    <form>
+      <van-search
+        v-model="value"
+        placeholder="请输入搜索关键词"
+        show-action
+        @search="onSearch(value)"
+        @cancel="onCancel"
+      />
     </form>
-
     <div class="warp">
       <van-row type="flex" justify="space-between" v-for="(item,index) in hotsearch" :key="index">
         <van-col span="8">{{index+1}}</van-col>
@@ -30,10 +28,15 @@
 </template>
 
 <script>
+import navigation from "../Common/Navigation";
 export default {
   name: "search",
+  components: {
+    navigation
+  },
   data() {
     return {
+      title: "热门搜索",
       value: "",
       hotsearch: []
     };
@@ -42,25 +45,23 @@ export default {
     //   默认搜索
     getdefault() {
       this.axios.get("/search/default").then(res => {
-        // console.log(res);
         this.value = res.data.data.showKeyword;
       });
     },
     gethotsearch() {
       this.axios.get("/search/hot/detail").then(res => {
-        // console.log(res);
         this.hotsearch = res.data.data;
         // console.log(this.hotsearch);
       });
     },
     // 搜索
-    onSearch(value) {
-      this.$router.push("/display");
+    onSearch(keyword) {
+      this.$router.push({ path: "/search/" + keyword });
     },
     // 清除
     onCancel() {
       this.value = "";
-    }
+    },
   },
   mounted() {
     this.gethotsearch();

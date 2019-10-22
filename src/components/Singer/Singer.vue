@@ -1,14 +1,20 @@
 <template>
   <div id="songer">
-    <div class="wrap" v-for="(item,index) in songer" :key="index">
-      <router-link :to="'/singer/'+item.id">
-        <img v-lazy="item.img1v1Url" />
-      </router-link>
-      <div class="describe">
-        <div class="title">{{item.name}}</div>
-        <div class="album">专辑数:{{item.albumSize}}</div>
+    <transition-group
+      enter-active-class="animated rollIn"
+      leave-active-class="animated rotateInDownRight"
+      tag="div"
+    >
+      <div class="wrap" v-for="(item,index) in songer" :key="index">
+        <router-link :to="'/singer/'+item.id">
+          <img v-lazy="item.img1v1Url" />
+        </router-link>
+        <div class="describe">
+          <div class="title">{{item.name}}</div>
+          <div class="album">专辑数:{{item.albumSize}}</div>
+        </div>
       </div>
-    </div>
+    </transition-group>
   </div>
 </template>
 

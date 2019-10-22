@@ -1,40 +1,55 @@
 <template>
   <div id="songdetail">
+    <navigation :title="title" />
     <div class="wrap">
       <div class="word" v-for="(item,index) in word" :key="index">
-        <p>{{item.words}}</p>
+        <div class="contain">
+          <p>{{item.words}}</p>
+        </div>
       </div>
     </div>
+    <audio class="audio" :src="audio.url" @ontimeupdate="ends()"></audio>
     <div class="bottom">
       <i class="iconfont">&#xe698;</i>
-      <i class="iconfont">&#xe612;</i>
+      <i class="iconfont" @click="playaudio">&#xe612;</i>
       <i class="iconfont">&#xe611;</i>
-      <i class="iconfont">&#xe61e;</i>
     </div>
   </div>
 </template>
 
 <script>
+import navigation from "./Navigation";
 import lyric from "lyric-parser";
 export default {
   name: "songdetail",
+  components: {
+    navigation
+  },
   data() {
     return {
-      word: []
+      title: "歌词",
+      word: [],
+      songarr: [],
+      audio: "",
+      i: ""
     };
   },
   methods: {
+    // 音乐url
+    getsongurl(id) {
+      this.axios.get("/song/url?id=" + id).then(res => {
+        this.audio = res.data.data[0];
+      });
+    },
     getword(id) {
       this.axios.get("/lyric?id=" + id).then(res => {
-        // console.log(res);
         let wordarr = res.data.lrc.lyric;
-        let songarr = wordarr.split("\n"); //变为数组
-        for (let i = 0; i < songarr.length; i++) {
-          let str = songarr[i];
-          songarr[i] = this.createobject(str);
+        this.songarr = wordarr.split("\n"); //变为数组
+        for (let i = 0; i < this.songarr.length; i++) {
+          let str = this.songarr[i];
+          this.songarr[i] = this.createobject(str);
         }
-        this.word = songarr;
-        this.getindex();
+        this.word = this.songarr;
       });
     },
     // 转化为单句对象
@@ -56,17 +71,51 @@ export default {
     getindex() {
       let audio = document.getElementsByClassName("audio")[0];
       // 获取当前播放时间
-      let playtime = audio.currentTime;
+      let playtime = this.audio.currentTime;
+      console.log(playtime);
       for (var i = this.songarr.length - 1; i > 0; i--) {
         var liobject = this.songarr[i];
-        // console.log(liobject.time);
         if (playtime >= liobject.time) {
-          this.i = i;
+          return i;
+        }
+      }
+      return  1;
+    },
+    setroll() {
+      let index=this.getindex();
+      let wrap = document.querySelector(".wrap");
+      var p = wrap.querySelector(".active");
+      if (p) {
+        p.className = "";
+      }
+      if (index !== -1) {
+        wrap.children[index].classList.add(active);
+      }
+      wrap.style.marginTop = 40 + "px";
+    },
+    ends() {
+      this.setroll();
+      console.log(1);
+    },
+    playaudio(e) {
+      let audio = document.getElementsByClassName("audio")[0];
+      if (audio !== null) {
+        //检测播放是否已暂停.audio.paused 在播放器播放时返回false.
+        // console.log(audio.paused);
+        if (audio.paused) {
+          audio.play(); //audio.play();// 这个就是播放
+          e.target.innerHTML = "&#xe68e;";
+          this.$toast.success("开始播放");
+        } else {
+          audio.pause(); // 这个就是暂停
+          e.target.innerHTML = "&#xe612;";
+          this.$toast.fail("暂停播放");
         }
       }
     }
   },
   mounted() {
+    this.getsongurl(this.$route.params.id);
     this.getword(this.$route.params.id);
   }
 };
@@ -95,6 +144,7 @@ export default {
   font-size: 3rem;
   color: skyblue;
   cursor: pointer;
+  z-index: 10000;
 }
 i:hover {
   background: #555;

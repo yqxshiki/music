@@ -15,6 +15,11 @@ import { Lazyload } from 'vant';
 Vue.use(Vant)
 Vue.use(Lazyload);
 
+// animation动画库
+import animate from 'animate.css'
+Vue.use(animate);
+
+
 Vue.config.productionTip = false
 
 new Vue({

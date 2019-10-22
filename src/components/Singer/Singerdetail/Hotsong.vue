@@ -1,18 +1,24 @@
 <template>
   <div id="hotsong">
     <h3>推荐歌曲</h3>
-    <div class="wrap" v-for="(item,index) in songs" :key="index">
-      <div class="index">{{index+1}}</div>
-      <div class="song">
-        <div class="name">{{item.name}}</div>
-        <div class="singer">{{item.ar[0].name}}--{{item.al.name}}</div>
+    <transition-group
+      enter-active-class="animated rotateInUpLeft"
+      leave-active-class="animated rotateInDownRight"
+      tag="div"
+    >
+      <div class="wrap" v-for="(item,index) in songs" :key="index">
+        <div class="index">{{index+1}}</div>
+        <div class="song">
+          <div class="name">{{item.name}}</div>
+          <div class="singer">{{item.ar[0].name}}--{{item.al.name}}</div>
+        </div>
+        <div class="meun">
+          <router-link :to="'/songdetail/'+item.id">
+            <van-icon name="ellipsis" class="ellipsis" />
+          </router-link>
+        </div>
       </div>
-      <div class="meun">
-        <router-link :to="'/songdetail/'+item.id">
-          <van-icon name="ellipsis" class="ellipsis" />
-        </router-link>
-      </div>
-    </div>
+    </transition-group>
   </div>
 </template>
 
@@ -29,7 +35,6 @@ export default {
     getsongs(id) {
       this.axios.get("/artists?id=" + id).then(res => {
         this.songs = res.data.hotSongs;
-        console.log(this.songs);
       });
     }
   },
@@ -49,6 +54,8 @@ export default {
   text-align: center;
   width: 100%;
   height: 4rem;
+  border-radius: 50px;
+  border-bottom: 2px solid rgb(44, 28, 187);
 }
 .index {
   color: black;

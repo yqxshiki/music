@@ -28,12 +28,12 @@
       <router-link to="/user">
         <div class="user">用户信息</div>
       </router-link>
-      <div class="tool">工具</div>
+      <div class="tool" @click="nohave">工具</div>
       <div class="Scan" @click="nohave">扫一扫</div>
       <router-link to="/about">
         <div class="about">关于我们</div>
       </router-link>
-      <div class="setting">设置</div>
+      <div class="setting" @click="nohave">设置</div>
     </div>
     <footer>
       <div class="imgicon" @click="signout">

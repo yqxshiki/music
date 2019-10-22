@@ -1,21 +1,23 @@
 <template>
   <div id="mv">
     <h3>推荐MV</h3>
-    <div class="wrap" v-for="(item,index) in mv" :key="index">
-      <div class="img">
-        <router-link :to="'/videoplay/'+item.id">
-          <img v-lazy="item.imgurl" alt />
-        </router-link>
-        <div class="playcount">
-          <van-icon name="play-circle-o" />
-          {{item.playCount}}
+    <transition-group
+      enter-active-class="animated rollIn"
+      leave-active-class="animated rotateInDownRight"
+      tag="div"
+    >
+      <div class="wrap" v-for="(item,index) in mv" :key="index">
+        <div class="img">
+          <router-link :to="'/videoplay/'+item.id">
+            <img v-lazy="item.imgurl" alt />
+          </router-link>
+        </div>
+        <div class="detail">
+          <p class="name">{{item.name}}</p>
+          <p class="duration">播放时间:{{item.duration | tiems}}分钟</p>
         </div>
       </div>
-      <div class="detail">
-        <p class="name">{{item.name}}</p>
-        <p class="duration">播放时间:{{item.duration | tiems}}分钟</p>
-      </div>
-    </div>
+    </transition-group>
   </div>
 </template>
 

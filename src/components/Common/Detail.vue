@@ -29,21 +29,25 @@
             <van-icon name="bar-chart-o" />
           </van-col>
         </van-row>
+        <transition-group
+          enter-active-class="animated rubberBand"
+          leave-active-class="animated rotateIn"
+        >
+          <div class="list" v-for="(item,index) in song" :key="index">
+            <div class="id">{{index+1}}</div>
 
-        <div class="list" v-for="(item,index) in song" :key="index">
-          <div class="id">{{index+1}}</div>
-
-          <div class="dansong" @click="playaudio(item.id)">
-            <audio class="audio" :src="audio.url"></audio>
-            <div class="name">{{item.name}}</div>
-            <div class="songer">{{item.ar[0].name}}--{{item.al.name}}</div>
+            <div class="dansong" @click="playaudio(item.id)">
+              <audio class="audio" :src="audio.url"></audio>
+              <div class="name">{{item.name}}</div>
+              <div class="songer">{{item.ar[0].name}}--{{item.al.name}}</div>
+            </div>
+            <div class="meun">
+              <router-link :to="'/songdetail/'+item.id">
+                <van-icon name="ellipsis" class="ellipsis" />
+              </router-link>
+            </div>
           </div>
-          <div class="meun">
-            <router-link :to="'/songdetail/'+item.id">
-              <van-icon name="ellipsis" class="ellipsis" />
-            </router-link>
-          </div>
-        </div>
+        </transition-group>
       </div>
     </div>
   </div>
@@ -57,8 +61,6 @@ export default {
       details: [],
       song: [],
       audio: [],
-      songarr: [],
-      i: 0,
       isshow: false,
       isloading: true
     };
@@ -72,67 +74,24 @@ export default {
         this.song = res.data.playlist.tracks;
       });
     },
-    getword(id) {
-      this.axios.get("/lyric?id=" + id).then(res => {
-        // console.log(res);
-        let wordarr = res.data.lrc.lyric;
-        let songarr = wordarr.split("\n"); //变为数组
-        for (let i = 0; i < songarr.length; i++) {
-          let str = songarr[i];
-          songarr[i] = this.createobject(str);
-        }
-        this.songarr = songarr;
-        this.getindex();
-      });
-    },
-    getindex() {
-      let audio = document.getElementsByClassName("audio")[0];
-      // 获取当前播放时间
-      let playtime = audio.currentTime;
-      for (var i = this.songarr.length - 1; i > 0; i--) {
-        var liobject = this.songarr[i];
-        // console.log(liobject.time);
-        if (playtime >= liobject.time) {
-          this.i = i;
-        }
-      }
-    },
-    // 转化为单句对象
-    createobject(str) {
-      let object = str.split("]");
-      let time = object[0];
-      let words = object[1];
-      time = time.replace("[", ""); //去掉左边的[
-      // 时间化为秒
-      let times = time.split(":");
-      var minute = times[0];
-      var second = times[1];
-      time = parseInt(minute * 60) + parseFloat(second);
-      return {
-        time: time,
-        words: words
-      };
-    },
     // 音乐url
     getsongurl(id) {
       this.axios.get("/song/url?id=" + id).then(res => {
-        // console.log(res);
         this.audio = res.data.data[0];
       });
-      this.getword(id);
     },
     playaudio(id) {
       this.getsongurl(id);
       let audio = document.getElementsByClassName("audio")[0];
       if (audio !== null) {
         //检测播放是否已暂停.audio.paused 在播放器播放时返回false.
-        console.log(audio.paused);
+        // console.log(audio.paused);
         if (audio.paused) {
           audio.play(); //audio.play();// 这个就是播放
-          this.$notify({ type: "success", message: "开始播放" });
+          this.$toast.success("开始播放");
         } else {
           audio.pause(); // 这个就是暂停
-          this.$notify({ type: "danger", message: "停止播放" });
+          this.$toast.fail("暂停播放");
         }
       }
     },
@@ -147,12 +106,6 @@ export default {
         this.isshow = true;
         this.isloading = false;
       }
-    }
-  },
-  computed: {
-    showcurrent() {
-      return (this.word = this.songarr[this.i].words);
-      console.log(this.word);
     }
   },
   mounted() {
@@ -248,7 +201,7 @@ span {
   font-weight: 700;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
-.play span{
+.play span {
   color: #000;
 }
 .van-icon-bar-chart-o {
@@ -286,7 +239,8 @@ span {
   flex: 6;
 }
 .dansong .name {
-  font-size: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 700;
   color: #000;
 }
 .songer {

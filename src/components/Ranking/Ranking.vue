@@ -1,14 +1,21 @@
 <template>
   <div id="ranking">
     <div class="content">
-      <div class="wrap" v-for="(item,index) in rankarr" :key="index">
-        <router-link :to="'/ranking/'+item.id">
-          <div class="img">
-            <img v-lazy="item.coverImgUrl" />
-            <div class="title">{{item.updateFrequency}}</div>
-          </div>
-        </router-link>
-      </div>
+      <transition-group
+        enter-active-class="animated zoomInRight"
+        leave-active-class="animated rotateInDownRight"
+        delay-2s
+        tag="div"
+      >
+        <div class="wrap" v-for="(item,index) in rankarr" :key="index">
+          <router-link :to="'/ranking/'+item.id">
+            <div class="img">
+              <img v-lazy="item.coverImgUrl" />
+              <div class="title">{{item.updateFrequency}}</div>
+            </div>
+          </router-link>
+        </div>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -41,7 +48,7 @@ export default {
   width: 100%;
   height: 100vh;
 }
-.content {
+.content > div {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;

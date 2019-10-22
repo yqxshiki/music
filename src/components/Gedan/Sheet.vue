@@ -9,19 +9,25 @@
     </div>
     <div class="title">推荐歌单</div>
     <div class="wrap">
-      <div class="list" v-for="(item,index) in sheetarray" :key="index">
-        <div class="img">
-          <div class="count">
-            <van-icon name="service-o" />
-            :
-            {{item.playCount}}
+      <transition-group
+        enter-active-class="animated flipInX"
+        leave-active-class="animated rotateInDownRight"
+        tag="div"
+      >
+        <div class="list" v-for="(item,index) in sheetarray" :key="index">
+          <div class="img">
+            <div class="count">
+              <van-icon name="service-o" />
+              :
+              {{item.playCount}}
+            </div>
+            <router-link :to="'/sheet/'+item.id">
+              <img v-lazy="item.coverImgUrl" />
+            </router-link>
+            <div class="describe">{{item.name}}</div>
           </div>
-          <router-link :to="'/sheet/'+item.id">
-            <img v-lazy="item.coverImgUrl" />
-          </router-link>
-          <div class="describe">{{item.name}}</div>
         </div>
-      </div>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -76,7 +82,7 @@ export default {
   text-indent: 1rem;
 }
 /* 歌单 */
-.wrap {
+.wrap > div {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
@@ -101,8 +107,8 @@ export default {
 .count {
   font-size: 0.5rem;
   position: absolute;
-  right: 20px;
-  top: 10px;
+  right: -1px;
+  top: 18px;
   color: #ffffff;
 }
 .count img {

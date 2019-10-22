@@ -23,11 +23,6 @@ export default {
       message: "关于vue-music",
       search: ""
     };
-  },
-  methods: {
-    onClickLeft() {
-      this.$router.go(-1);
-    }
   }
 };
 </script>

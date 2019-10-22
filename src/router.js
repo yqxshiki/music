@@ -37,7 +37,9 @@ export default new Router({
                 { path: "/personaldetail", component: () => import("./components/Singer/Singerdetail/Personaldetail.vue") },
                 { path: "/mv", component: () => import("./components/Singer/Singerdetail/Mv.vue") },
                 { path: "/hotsong", component: () => import("./components/Singer/Singerdetail/Hotsong.vue") },
-                { path: "/album", component: () => import("./components/Singer/Singerdetail/Album.vue") }
+                { path: "/album", component: () => import("./components/Singer/Singerdetail/Album.vue") },
+                { path: "/resolve", component: () => import("./components/Singer/Singerdetail/Resolve.vue") }
+
             ]
         },
         // 专辑详情
