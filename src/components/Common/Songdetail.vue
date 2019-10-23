@@ -2,13 +2,23 @@
   <div id="songdetail">
     <navigation :title="title" />
     <div class="wrap">
-      <div class="word" v-for="(item,index) in word" :key="index">
-        <div class="contain">
-          <p>{{item.words}}</p>
+      <div class="ul" ref="ul">
+        <div class="word" ref="word" v-for="(item,index) in word" :key="index">
+          <p ref="p">{{item.words}}</p>
         </div>
       </div>
     </div>
-    <audio class="audio" :src="audio.url" @ontimeupdate="ends()"></audio>
+    <div class="progressbar" @click="click">
+      <van-progress color="#ee0a24" :percentage="playtime" :show-pivot="false" />
+    </div>
+    <audio
+      class="audio"
+      ref="audio"
+      loop="loop"
+      :src="audiourl.url"
+      @timeupdate="onTimeupdate"
+      @loadedmetadata="onLoadedmetadata"
+    ></audio>
     <div class="bottom">
       <i class="iconfont">&#xe698;</i>
       <i class="iconfont" @click="playaudio">&#xe612;</i>
@@ -19,7 +29,6 @@
 
 <script>
 import navigation from "./Navigation";
-import lyric from "lyric-parser";
 export default {
   name: "songdetail",
   components: {
@@ -30,15 +39,22 @@ export default {
       title: "歌词",
       word: [],
       songarr: [],
-      audio: "",
-      i: ""
+      audiourl: "",
+      i: "",
+      audio: {
+        currentTime: 0,
+        maxTime: 0,
+        minTime: 0
+      },
+      // 进度条
+      playtime: 0
     };
   },
   methods: {
     // 音乐url
     getsongurl(id) {
       this.axios.get("/song/url?id=" + id).then(res => {
-        this.audio = res.data.data[0];
+        this.audiourl = res.data.data[0];
       });
     },
     getword(id) {
@@ -69,34 +85,67 @@ export default {
       };
     },
     getindex() {
-      let audio = document.getElementsByClassName("audio")[0];
       // 获取当前播放时间
-      let playtime = this.audio.currentTime;
-      console.log(playtime);
+      let playtime = this.$refs.audio.currentTime;
+      let playtimes = playtime + 0.7;
       for (var i = this.songarr.length - 1; i > 0; i--) {
         var liobject = this.songarr[i];
-        if (playtime >= liobject.time) {
+        if (playtimes >= liobject.time) {
           return i;
         }
       }
-      return  1;
+      return -1;
     },
     setroll() {
-      let index=this.getindex();
-      let wrap = document.querySelector(".wrap");
-      var p = wrap.querySelector(".active");
+      // 动态添加class
+      let index = this.getindex();
+      let ul = document.querySelector(".ul");
+      let p = ul.querySelector(".active");
       if (p) {
         p.className = "";
       }
       if (index !== -1) {
-        wrap.children[index].classList.add(active);
+        this.$refs.p[index].className = "active";
       }
-      wrap.style.marginTop = 40 + "px";
+      // 歌词滚动
+      let config = {
+        ulheight: 500,
+        liheight: 30
+      };
+      var midHeight = config.ulheight / 2 - config.liheight / 2;
+      var margintop = midHeight - index * config.liheight;
+
+      if (margintop > 0) {
+        margintop = 0;
+      }
+      this.$refs.ul.style.marginTop = margintop + "px";
     },
-    ends() {
+    // 更新进度条
+    onTimeupdate(res) {
+      // 播放时间
+      this.audio.currentTime = res.target.currentTime;
       this.setroll();
-      console.log(1);
+      // 更新进度条距离
+      this.playtime = parseInt(
+        (this.audio.currentTime / this.audio.maxTime) * 100
+      );
     },
+    // 获取歌曲总时长
+    onLoadedmetadata(res) {
+      this.audio.maxTime = parseInt(res.target.duration);
+    },
+    // 移动进度条
+    click(res) {
+      // 当前点击距离
+      let clicktime = res.clientX;
+      // 进度条距离
+      this.playtime = parseInt((clicktime / 375) * 100);
+      // 更新播放时间
+      this.$refs.audio.currentTime = parseInt(
+        (this.playtime / 100) * this.audio.maxTime
+      );
+    },
+    // 播放
     playaudio(e) {
       let audio = document.getElementsByClassName("audio")[0];
       if (audio !== null) {
@@ -121,17 +170,42 @@ export default {
 };
 </script>
 <style scoped>
+#songdetail {
+  width: 100%;
+  height: 100vh;
+  background: rgb(221, 205, 205);
+}
 .wrap {
   text-align: center;
   opacity: 0.6;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   width: 100%;
   height: 500px;
-  overflow: hidden;
+  overflow-x: hidden;
+}
+.ul {
+  transition: 0.7s;
 }
 .active {
-  color: #f40;
-  font-size: 1rem;
+  font-size: 1.2rem;
+  color: #2c3e5036;
+  background-image: url("../../assets/wenzi.jpeg");
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: change 3s infinite;
+}
+@keyframes change {
+  0% {
+    background-position: left 0 top 0px;
+  }
+
+  100% {
+    background-position: left 400px top 0px;
+  }
+}
+/* 进度条 */
+.progressbar {
+  margin: 2rem auto;
 }
 /* 按钮 */
 .bottom {
@@ -149,5 +223,6 @@ export default {
 i:hover {
   background: #555;
   opacity: 0.6;
+  transition: 0.7s;
 }
 </style>
