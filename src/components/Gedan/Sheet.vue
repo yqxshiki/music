@@ -10,7 +10,7 @@
     <div class="title">推荐歌单</div>
     <div class="wrap">
       <transition-group
-        enter-active-class="animated flipInX"
+        enter-active-class="animated wobble"
         leave-active-class="animated rotateInDownRight"
         tag="div"
       >

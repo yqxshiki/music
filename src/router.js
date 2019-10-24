@@ -47,14 +47,13 @@ export default new Router({
         // 视频详情
         { path: "/videoplay/:id", component: () => import("./components/Common/Videoplay.vue") },
         { path: "/videoplay2/:id", component: () => import("./components/Common/Videoplay2.vue") },
-
         // 搜索
         { path: "/search", component: () => import("./components/Search/Search.vue") },
         { path: "/search/:vaule", component: () => import("./components/Search/Display.vue") },
         // 404
         { path: "/error", component: () => import("./components/Error.vue") },
-
-
+        { path: "/login", component: () => import("./components/Login/Login.vue") },
+        { path: "/register", component: () => import("./components/Login/Register.vue") },
         { path: "*", redirect: "/error" }
 
     ]

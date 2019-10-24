@@ -217,7 +217,7 @@ span {
   height: 3rem;
   margin-top: 2rem;
   border-radius: 1rem;
-  border-bottom: 2px solid rgb(44, 28, 187);
+  border-bottom: 0.2rem solid rgb(60, 43, 214);
 }
 .list:hover {
   background: linear-gradient(45deg, #f40, skyblue);
@@ -228,7 +228,8 @@ span {
 }
 .id {
   flex: 2;
-  font-size: 0.3rem;
+  font-size: 0.6rem;
+  color: #000;
   margin-left: 1rem;
 }
 .list .audio {

@@ -36,10 +36,14 @@ export default {
   methods: {
     // 获取用户信息
     getuser() {
-      this.axios.get("/user/playlist?uid=32953014").then(res => {
-        // console.log(res);
-        this.userarr = res.data.playlist;
-      });
+      if (this.$store.state.uid == "") {
+        this.$store.state.uid = JSON.parse(sessionStorage.getItem("uid"));
+      }
+      this.axios
+        .get("/user/playlist?uid=" + this.$store.state.uid)
+        .then(res => {
+          this.userarr = res.data.playlist;
+        });
     }
   },
   mounted() {

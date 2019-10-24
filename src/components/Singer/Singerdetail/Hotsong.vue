@@ -55,7 +55,7 @@ export default {
   width: 100%;
   height: 4rem;
   border-radius: 50px;
-  border-bottom: 2px solid rgb(44, 28, 187);
+  border-bottom: 0.2rem solid rgb(60, 43, 214);
 }
 .index {
   color: black;

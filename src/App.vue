@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <router-view v-if="isShow"></router-view>
   </div>
 </template>
 
@@ -13,6 +13,27 @@ export default {
   components: {
     appheader,
     appfooter
+  },
+  data() {
+    return {
+      isShow: true
+    };
+  },
+  // 提供可注入子组件属性
+  provide() {
+    return {
+      reload: this.reload
+    };
+  },
+  methods: {
+    // 定义reload方法
+    reload() {
+      this.isShow = false;
+      // $nextTick() 将回调延迟到下次 DOM 更新循环之后执行
+      this.$nextTick(() => {
+        this.isShow = true;
+      });
+    }
   }
 };
 </script>
