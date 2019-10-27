@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import sidebar from "./Sidebar";
+import sidebar from "./Popup/Sidebar";
 export default {
   name: "appheader",
   components: {

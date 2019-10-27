@@ -1,7 +1,7 @@
 <template>
   <div id="login">
     <navigation :title="title" />
-
+    
     <div class="img">
       <img src="../../assets/e.jpg" />
     </div>
@@ -62,9 +62,9 @@ export default {
           )
           .then(res => {
             this.$store.state.uid = res.data.account.id;
-            // 存入sessionStorage 防止刷新数据消失
+            // 存入localStorage 防止刷新数据消失
             let id = JSON.stringify(res.data.account.id);
-            sessionStorage.setItem("uid", id);
+            localStorage.setItem("uid", id);
             this.$dialog
               .alert({
                 message: "登录成功!"

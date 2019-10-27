@@ -11,8 +11,8 @@
         </router-link>
         <div class="message">
           <p>{{item.name}}</p>
-          <p>播放{{item.playCount}}次</p>
-          <p>创建者{{item.creator.nickname}}</p>
+          <p>播放:{{item.playCount | count}}次</p>
+          <p>创建者:{{item.creator.nickname}}</p>
         </div>
       </div>
     </div>
@@ -33,11 +33,29 @@ export default {
       userarr: []
     };
   },
-  methods: {
+  filters: {
+    count(value) {
+      if (value > 10000) {
+        return Math.floor(value / 10000) + "万";
+      } else {
+        return value;
+      }
+    }
+  },
+  computed: {
     // 获取用户信息
     getuser() {
+      if (!localStorage.getItem("uid")) {
+        this.$dialog
+          .alert({
+            message: "您还没有登录,请登录!!"
+          })
+          .then(() => {
+            this.$router.push("/login");
+          });
+      }
       if (this.$store.state.uid == "") {
-        this.$store.state.uid = JSON.parse(sessionStorage.getItem("uid"));
+        this.$store.state.uid = JSON.parse(localStorage.getItem("uid"));
       }
       this.axios
         .get("/user/playlist?uid=" + this.$store.state.uid)
@@ -47,7 +65,7 @@ export default {
     }
   },
   mounted() {
-    this.getuser();
+    this.getuser;
   }
 };
 </script>
@@ -66,5 +84,8 @@ export default {
 .img img {
   width: 9rem;
   margin-right: 0.5rem;
+}
+p {
+  font-size: 0.8rem;
 }
 </style>

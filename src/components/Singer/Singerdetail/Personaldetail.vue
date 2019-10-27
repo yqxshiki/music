@@ -25,7 +25,6 @@ export default {
       this.axios.get("/artists?id=" + id).then(res => {
         this.personal = res.data.artist;
         this.alias = this.personal.alias[0];
-        // console.log(this.personal);
         if (this.personal.alias.length == 0) {
           this.isshow = false;
         } else {

@@ -3,11 +3,12 @@
     <van-nav-bar
       :title="title"
       left-text="返回"
-      :right-text="search"
+      right-text="首页"
       left-arrow
       @click-left="onClickLeft"
       @click-right="onClickRight"
     />
+    <!-- :right-text="search" -->
   </div>
 </template>
 
@@ -20,9 +21,9 @@ export default {
     onClickLeft() {
       this.$router.go(-1);
     },
-    // 搜索
+    // 返回首页
     onClickRight() {
-      this.$router.push("/search");
+      this.$router.push("/sheet");
     }
   }
 };

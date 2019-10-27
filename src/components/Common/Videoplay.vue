@@ -1,13 +1,13 @@
 <template>
   <div id="videoplay">
-    <navigation :title="title"/>
+    <navigation :title="title" />
     <div class="wrap">
       <div class="video">
         <video :src="resources[1080]" controls preload="auto"></video>
       </div>
       <div class="mvbottom">
         <div class="singer">{{video.artistName}}--{{video.name}}</div>
-        <div class="playcount">播放量:{{video.playCount}}</div>
+        <div class="playcount">播放量:{{video.playCount | counts}} 万</div>
       </div>
     </div>
     <div class="commonmv" v-for="(item,index) in commonmv" :key="index">
@@ -18,7 +18,7 @@
       </div>
       <div class="mvbottom">
         <div class="singer">{{item.artistName}}--{{item.name}}</div>
-        <div class="playcount">播放量:{{item.playCount}}</div>
+        <div class="playcount">播放量:{{item.playCount | counts}} 万</div>
       </div>
     </div>
   </div>
@@ -38,6 +38,11 @@ export default {
       commonmv: [],
       resources: ""
     };
+  },
+  filters: {
+    counts(value) {
+      return Math.floor(value / 10000);
+    }
   },
   methods: {
     // mv详情

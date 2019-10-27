@@ -13,7 +13,7 @@
     </div>
     <audio
       class="audio"
-      ref="audio"
+      ref="audios"
       loop="loop"
       :src="audiourl.url"
       @timeupdate="onTimeupdate"
@@ -58,15 +58,20 @@ export default {
       });
     },
     getword(id) {
-      this.axios.get("/lyric?id=" + id).then(res => {
-        let wordarr = res.data.lrc.lyric;
-        this.songarr = wordarr.split("\n"); //变为数组
-        for (let i = 0; i < this.songarr.length; i++) {
-          let str = this.songarr[i];
-          this.songarr[i] = this.createobject(str);
-        }
-        this.word = this.songarr;
-      });
+      this.axios
+        .get("/lyric?id=" + id)
+        .then(res => {
+          let wordarr = res.data.lrc.lyric;
+          this.songarr = wordarr.split("\n"); //变为数组
+          for (let i = 0; i < this.songarr.length; i++) {
+            let str = this.songarr[i];
+            this.songarr[i] = this.createobject(str);
+          }
+          this.word = this.songarr;
+        })
+        .catch(err => {
+          this.$toast.fail("当前没有歌词");
+        });
     },
     // 转化为单句对象
     createobject(str) {
@@ -86,7 +91,7 @@ export default {
     },
     getindex() {
       // 获取当前播放时间
-      let playtime = this.$refs.audio.currentTime;
+      let playtime = this.$refs.audios.currentTime;
       let playtimes = playtime + 0.7;
       for (var i = this.songarr.length - 1; i > 0; i--) {
         var liobject = this.songarr[i];
@@ -110,7 +115,7 @@ export default {
       // 歌词滚动
       let config = {
         ulheight: 500,
-        liheight: 30
+        liheight: 44
       };
       var midHeight = config.ulheight / 2 - config.liheight / 2;
       var margintop = midHeight - index * config.liheight;
@@ -141,20 +146,44 @@ export default {
       // 进度条距离
       this.playtime = parseInt((clicktime / 375) * 100);
       // 更新播放时间
-      this.$refs.audio.currentTime = parseInt(
+      this.$refs.audios.currentTime = parseInt(
         (this.playtime / 100) * this.audio.maxTime
       );
+      this.setroll();
     },
     // 播放
     playaudio(e) {
-      let audio = document.getElementsByClassName("audio")[0];
+      let audio1 = document.getElementsByClassName("audio")[0];
+      audio1.pause();
+      let audio = document.getElementsByClassName("audio")[1];
       if (audio !== null) {
-        //检测播放是否已暂停.audio.paused 在播放器播放时返回false.
-        // console.log(audio.paused);
+        //检测播放是否已暂停.audio.paused 在播放器播放时返回true
         if (audio.paused) {
-          audio.play(); //audio.play();// 这个就是播放
+          let playpromise = audio.play();
+          if (playpromise == undefined) {
+            playpromise
+              .then(() => {
+                audio.play();
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          }
           e.target.innerHTML = "&#xe68e;";
           this.$toast.success("开始播放");
+          //把播放过的歌曲id 存入localStorage
+          //防止页面刷新后vuex里面的数据消失
+          if (this.$store.state.songid.length == 0) {
+            this.$store.state.songid = JSON.parse(
+              localStorage.getItem("songid")
+            );
+          }
+          //点击同一首歌，不添加
+          if (this.$store.state.songid.indexOf(this.$route.params.id) == -1) {
+            this.$store.state.songid.push(this.$route.params.id);
+            let songid = JSON.stringify(this.$store.state.songid);
+            localStorage.setItem("songid", songid);
+          }
         } else {
           audio.pause(); // 这个就是暂停
           e.target.innerHTML = "&#xe612;";
@@ -166,6 +195,17 @@ export default {
   mounted() {
     this.getsongurl(this.$route.params.id);
     this.getword(this.$route.params.id);
+  },
+  beforeRouteLeave(to, from, next) {
+    // 退出前关闭播放
+    if (this.$refs.audios.paused == false) {
+      this.$refs.audios.pause();
+    }
+    // 防止在退出时,还在调用currentTime
+    setTimeout(() => {
+      this.$store.state.footer = true;
+      next();
+    }, 100);
   }
 };
 </script>
@@ -173,15 +213,18 @@ export default {
 #songdetail {
   width: 100%;
   height: 100vh;
-  background: rgb(221, 205, 205);
+  background: rgb(219, 203, 203);
 }
 .wrap {
   text-align: center;
   opacity: 0.6;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   width: 100%;
   height: 500px;
   overflow-x: hidden;
+}
+.word {
+  padding-top: 10px;
 }
 .ul {
   transition: 0.7s;

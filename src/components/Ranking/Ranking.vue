@@ -32,9 +32,7 @@ export default {
     // 所有榜单内容摘要
     getdetail() {
       this.axios.get("/toplist/detail").then(res => {
-        // console.log(res);
         this.rankarr = res.data.list;
-        // console.log(this.rankarr);
       });
     }
   },

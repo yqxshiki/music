@@ -69,36 +69,34 @@ export default {
           cancelButtonText: "取消" //改变取消按钮上显示的文字
         })
         .then(() => {
-          sessionStorage.removeItem("uid");
+          localStorage.removeItem("uid");
           this.reload();
           this.$router.push("/login");
         })
-        .catch(() => {
-          console.log("点击了取消按钮噢");
-        });
+        .catch(() => {});
     },
     // 获取用户信息
     getuser() {
-      if (this.$store.state.uid == "") {
-        this.$store.state.uid = JSON.parse(sessionStorage.getItem("uid"));
-      }
-      // 取vuex的id获取信息
-      this.axios
-        .get("/user/detail?uid=" + this.$store.state.uid)
-        .then(res => {
-          this.user = res.data.profile;
-          console.log(res);
-        })
-        .catch(err => {
-          // 默认，无登录时
-          this.$refs.img.src =
-            "https://blog-1259178461.cos.ap-chengdu.myqcloud.com/vue-music/default.jpg";
-          this.$refs.name.innerHTML = "当前无账号,请登录!";
-          this.$notify({
-            type: "danger",
-            message: "当前没有登录账号，请登录账号"
-          });
+      if (!JSON.parse(localStorage.getItem("uid"))) {
+        // 默认，无登录时
+        this.$refs.img.src =
+          "https://blog-1259178461.cos.ap-chengdu.myqcloud.com/vue-music/default.jpg";
+        this.$refs.name.innerHTML = "当前无账号,请登录!";
+        this.$notify({
+          type: "danger",
+          message: "当前没有登录账号，请登录账号"
         });
+      } else {
+        if (this.$store.state.uid == "") {
+          this.$store.state.uid = JSON.parse(localStorage.getItem("uid"));
+        }
+        // 取vuex的id获取信息
+        this.axios
+          .get("/user/detail?uid=" + this.$store.state.uid)
+          .then(res => {
+            this.user = res.data.profile;
+          });
+      }
     }
   },
   mounted() {
@@ -160,7 +158,7 @@ export default {
   height: 2rem;
   background: #ccc;
   text-align: center;
-  margin-top: 1.4rem;
+  margin-top: 10%;
   border-radius: 1rem;
   line-height: 2rem;
   color: black;

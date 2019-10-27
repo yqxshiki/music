@@ -1,6 +1,9 @@
 <template>
   <div id="search">
-    <navigation :title="title" />
+    <div class="red">
+      <navigation :title="title" />
+    </div>
+
     <form>
       <van-search
         v-model="value"
@@ -51,7 +54,6 @@ export default {
     gethotsearch() {
       this.axios.get("/search/hot/detail").then(res => {
         this.hotsearch = res.data.data;
-        // console.log(this.hotsearch);
       });
     },
     // 搜索
@@ -61,7 +63,7 @@ export default {
     // 清除
     onCancel() {
       this.value = "";
-    },
+    }
   },
   mounted() {
     this.gethotsearch();
@@ -70,6 +72,9 @@ export default {
 };
 </script>
 <style scoped>
+.red {
+  border-bottom: 2px solid red;
+}
 .van-row--flex {
   margin-top: 1rem;
   text-align: center;
@@ -78,10 +83,10 @@ export default {
 }
 .van-col {
   color: rgb(146, 110, 110);
-  font-size: 0.6rem;
+  font-size: 0.8rem;
 }
 .van-col--8:nth-child(1) {
-  margin-left: 1.4rem;
+  margin-left: -1rem;
   margin-top: 1rem;
 }
 .van-col .searchWord {

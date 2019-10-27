@@ -1,6 +1,9 @@
 <template>
   <div id="display">
-    <navigation :title="title" />
+    <div class="red">
+      <navigation :title="title" />
+    </div>
+
     <form>
       <van-search
         v-model="value"
@@ -15,8 +18,7 @@
     </div>
     <!-- 展示 -->
     <div class="warp" v-for="(item,index) in songarr" :key="index">
-      <div class="searchsong" @click="playaudio(item.id)">
-        <audio class="audio" :src="audio.url"></audio>
+      <div class="searchsong" @click="play(item.id)">
         <div class="name">{{item.name}}</div>
         <div class="songer">{{item.artists[0].name}}--{{item.album.name}}</div>
       </div>
@@ -40,10 +42,10 @@ export default {
     return {
       title: "搜索",
       songarr: [],
-      value: "",
-      audio: []
+      value: ""
     };
   },
+  inject: ["iffooter", "playaudio"],
   methods: {
     //   从其余地方搜索的结果
     getsongs(value) {
@@ -70,24 +72,12 @@ export default {
     // 音乐url
     getsongurl(id) {
       this.axios.get("/song/url?id=" + id).then(res => {
-        this.audio = res.data.data[0];
-        // console.log(this.audio);
+        this.$store.state.src = res.data.data[0].url;
       });
     },
-    playaudio(id) {
+    play(id) {
       this.getsongurl(id);
-      let audio = document.getElementsByClassName("audio")[0];
-      if (audio !== null) {
-        //检测播放是否已暂停.audio.paused 在播放器播放时返回false.
-        // console.log(audio.paused);
-        if (audio.paused) {
-          audio.play(); //audio.play();// 这个就是播放
-          this.$notify({ type: "success", message: "开始播放" });
-        } else {
-          audio.pause(); // 这个就是暂停
-          this.$notify({ type: "danger", message: "停止播放" });
-        }
-      }
+      this.playaudio(id);
     }
   },
   mounted() {
@@ -96,11 +86,13 @@ export default {
 };
 </script>
 <style scoped>
+.red {
+  border-bottom: 2px solid red;
+}
 .title {
   font-weight: bold;
   width: 100%;
   font-size: 1rem;
-  margin: 1rem;
   border-bottom: 2px solid #ccc;
 }
 .danqu {
@@ -112,8 +104,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-radius: 3rem;
-  border-bottom: 1px solid skyblue;
+  border-bottom: 1px solid black;
 }
 .warp:hover {
   background: linear-gradient(45deg, #f40, skyblue);

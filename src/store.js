@@ -5,7 +5,19 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        uid: 0
+        // 判断底部播放是否加载
+        footer: true,
+        // 登录信息
+        uid: 0,
+        // 歌曲id
+        songid: [],
+        // 歌曲资源
+        src: "1",
+        audio: {
+            currentTime: 0,
+            maxTime: 0,
+            minTime: 0
+        }
     },
     getters: {
     },

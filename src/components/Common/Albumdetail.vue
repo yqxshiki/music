@@ -23,9 +23,7 @@
             <span>(共{{songs.length}}首)</span>
           </div>
         </van-col>
-        <van-col span="6">
-          <van-icon name="bar-chart-o" />
-        </van-col>
+        <van-col span="6"></van-col>
       </van-row>
       <transition-group
         enter-active-class="animated jello"
@@ -34,8 +32,7 @@
         <div class="list" v-for="(item,index) in songs" :key="index">
           <div class="id">{{index+1}}</div>
 
-          <div class="dansong" @click="playaudio(item.id)">
-            <audio class="audio" :src="audio.url"></audio>
+          <div class="dansong" @click="play(item.id)">
             <div class="name">{{item.name}}</div>
             <div class="songer">{{item.ar[0].name}}--{{item.al.name}}</div>
           </div>
@@ -58,12 +55,12 @@ export default {
       album: [],
       artist: "",
       songs: [],
-      audio: [],
       i: 0,
       isshow: false,
       isloading: true
     };
   },
+  inject: ["iffooter", "playaudio"],
   methods: {
     // 歌单详情
     getdetails(id) {
@@ -75,24 +72,12 @@ export default {
     // 音乐url
     getsongurl(id) {
       this.axios.get("/song/url?id=" + id).then(res => {
-        this.audio = res.data.data[0];
-        // console.log(res);
+        this.$store.state.src = res.data.data[0].url;
       });
     },
-    playaudio(id) {
+    play(id) {
       this.getsongurl(id);
-      let audio = document.getElementsByClassName("audio")[0];
-      if (audio !== null) {
-        //检测播放是否已暂停.audio.paused 在播放器播放时返回false.
-        console.log(audio.paused);
-        if (audio.paused) {
-          audio.play(); //audio.play();// 这个就是播放
-          this.$notify({ type: "success", message: "开始播放" });
-        } else {
-          audio.pause(); // 这个就是暂停
-          this.$notify({ type: "danger", message: "停止播放" });
-        }
-      }
+      this.playaudio(id);
     },
     getalbum(id) {
       this.axios.get("/album?id=" + id).then(res => {
@@ -173,10 +158,12 @@ span {
   font-size: 1rem;
   font-weight: 700;
   color: #fff;
-  margin-top: -3rem;
+  margin-top: -5rem;
+  margin-left: 20px;
 }
 .singer {
   color: #fff;
+  margin-left: 10px;
 }
 /* 歌曲 */
 .song {
@@ -209,8 +196,8 @@ span {
   width: 100%;
   height: 3rem;
   margin-top: 2rem;
-  border-radius: 1rem;
-  border-bottom: 0.2rem solid rgb(60, 43, 214);
+  border-radius: 5px;
+  border-bottom: 2px solid #ccc;
 }
 .list:hover {
   background: linear-gradient(45deg, #f40, skyblue);
@@ -221,7 +208,8 @@ span {
 }
 .id {
   flex: 2;
-  font-size: 0.3rem;
+  font-size: 1rem;
+  color: black;
   margin-left: 1rem;
 }
 .list .audio {

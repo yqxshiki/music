@@ -1,14 +1,27 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from './store'
+import { format } from 'url'
 
+Vue.use(store)
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
     mode: "history",
     routes: [
         { path: "/", redirect: "/sheet" },
         {
-            path: "/home", component: () => import("./components/Home.vue"), redirect: "/sheet", children: [
+            path: "/home", component: () => import("./components/Home.vue"),
+            redirect: "/sheet",
+            // 避免用户在第一次使用时,没有songid而报错
+            beforeEnter: (to, from, next) => {
+                if (!localStorage.getItem("songid")) {
+                    let songid = [];
+                    songid = JSON.stringify(songid);
+                    localStorage.setItem("songid", songid);
+                };
+                next();
+            }, children: [
                 // 歌单
                 { path: "/sheet", component: () => import("./components/Gedan/Sheet.vue") },
 
@@ -20,13 +33,27 @@ export default new Router({
             ]
         },
         { path: "/header", component: () => import("./components/Header.vue") },
-        { path: "/footer", component: () => import("./components/Footer.vue") },
-        { path: "/sidebar", component: () => import("./components/Sidebar.vue") },
+        {
+            path: "/footer", component: () => import("./components/Footer.vue")
+        },
+        // 弹出层
+        { path: "/sidebar", component: () => import("./components/Popup/Sidebar.vue") },
+        {
+            path: "/playhistory", component: () => import("./components/Popup/Playhistory.vue")
+        },
+        // 账号相关
         { path: "/about", component: () => import("./components/About/About.vue") },
         { path: "/user", component: () => import("./components/User/user.vue") },
         // 公共组件
         { path: "/detail", component: () => import("./components/Common/Detail.vue") },
-        { path: "/songdetail/:id", component: () => import("./components/Common/Songdetail.vue") },
+        {
+            path: "/songdetail/:id",
+            component: () => import("./components/Common/Songdetail.vue"),
+            beforeEnter: (to, from, next) => {
+                store.state.footer = false
+                next();
+            }
+        },
         // 歌单详情
         { path: "/sheet/:id", component: () => import("./components/Gedan/sheetdetails.vue") },
         // 排行榜详情
@@ -58,3 +85,13 @@ export default new Router({
 
     ]
 })
+router.beforeEach((to, from, next) => {
+    if (to.path == "/login" || to.path == "/register" || to.path == "/error" || to.path == "/about") {
+        store.state.footer = false
+        next();
+    } else {
+        store.state.footer = true
+        next();
+    }
+})
+export default router

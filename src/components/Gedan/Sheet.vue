@@ -3,7 +3,7 @@
     <div class="pic">
       <van-swipe :autoplay="3000">
         <van-swipe-item v-for="(image, index) in pic" :key="index">
-          <img v-lazy="image.pic" />
+          <img v-lazy="image.pic" @click="nohave" />
         </van-swipe-item>
       </van-swipe>
     </div>
@@ -19,7 +19,7 @@
             <div class="count">
               <van-icon name="service-o" />
               :
-              {{item.playCount}}
+              {{item.playCount | counts}} 万
             </div>
             <router-link :to="'/sheet/'+item.id">
               <img v-lazy="item.coverImgUrl" />
@@ -41,17 +41,28 @@ export default {
       sheetarray: []
     };
   },
+  filters: {
+    counts(value) {
+      return Math.floor(value / 10000);
+    }
+  },
   methods: {
+    // 推荐歌单
     getsheet() {
       this.axios.get("/top/playlist").then(res => {
-        // console.log(res.data);
         this.sheetarray = res.data.playlists;
       });
     },
+    // 轮播图
     getpic() {
       this.axios.get("/banner?type=1").then(res => {
-        // console.log(res);
         this.pic = res.data.banners;
+      });
+    },
+    nohave() {
+      this.$dialog.alert({
+        message:
+          "抱歉,该图片仅供展示,不能播放该音乐,如果你喜欢这首音乐,请搜索获得！"
       });
     }
   },

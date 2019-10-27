@@ -8,7 +8,7 @@
     >
       <div class="wrap" v-for="(item,index) in songs" :key="index">
         <div class="index">{{index+1}}</div>
-        <div class="song">
+        <div class="song" @click="play(item.id)">
           <div class="name">{{item.name}}</div>
           <div class="singer">{{item.ar[0].name}}--{{item.al.name}}</div>
         </div>
@@ -31,11 +31,22 @@ export default {
     };
   },
   props: ["gid"],
+  inject: ["iffooter", "playaudio"],
   methods: {
     getsongs(id) {
       this.axios.get("/artists?id=" + id).then(res => {
         this.songs = res.data.hotSongs;
       });
+    },
+    // 音乐url
+    getsongurl(id) {
+      this.axios.get("/song/url?id=" + id).then(res => {
+        this.$store.state.src = res.data.data[0].url;
+      });
+    },
+    play(id) {
+      this.getsongurl(id);
+      this.playaudio(id);
     }
   },
   mounted() {
@@ -54,8 +65,12 @@ export default {
   text-align: center;
   width: 100%;
   height: 4rem;
-  border-radius: 50px;
-  border-bottom: 0.2rem solid rgb(60, 43, 214);
+  border-radius: 5px;
+  border-bottom: 2px solid #ccc;
+  margin-left: -1rem;
+}
+.wrap:hover {
+  background: linear-gradient(45deg, #f40, skyblue);
 }
 .index {
   color: black;
@@ -72,5 +87,6 @@ export default {
 }
 .singer {
   font-size: 0.1rem;
+  color: rgb(146, 142, 142);
 }
 </style>

@@ -14,7 +14,7 @@
       <div class="description">{{details.name}}</div>
       <div class="playcount">
         <van-icon name="service-o" />
-        播放量：{{details.playCount}}
+        播放量：{{details.playCount | counts}} 万
       </div>
       <!-- 歌曲 -->
       <div class="song">
@@ -25,9 +25,7 @@
               <span>(共{{details.trackCount}}首)</span>
             </div>
           </van-col>
-          <van-col span="6">
-            <van-icon name="bar-chart-o" />
-          </van-col>
+          <van-col span="6"></van-col>
         </van-row>
         <transition-group
           enter-active-class="animated rubberBand"
@@ -36,8 +34,7 @@
           <div class="list" v-for="(item,index) in song" :key="index">
             <div class="id">{{index+1}}</div>
 
-            <div class="dansong" @click="playaudio(item.id)">
-              <audio class="audio" :src="audio.url"></audio>
+            <div class="dansong" @click="play(item.id)">
               <div class="name">{{item.name}}</div>
               <div class="songer">{{item.ar[0].name}}--{{item.al.name}}</div>
             </div>
@@ -54,18 +51,25 @@
 </template>
 
 <script>
+import { filter } from "minimatch";
 export default {
   name: "detail",
   data() {
     return {
       details: [],
       song: [],
-      audio: [],
       isshow: false,
-      isloading: true
+      isloading: true,
+      index: -1
     };
   },
   props: ["title"],
+  inject: ["iffooter", "playaudio"],
+  filters: {
+    counts(value) {
+      return Math.floor(value / 10000);
+    }
+  },
   methods: {
     // 歌单详情
     getdetails(id) {
@@ -77,23 +81,12 @@ export default {
     // 音乐url
     getsongurl(id) {
       this.axios.get("/song/url?id=" + id).then(res => {
-        this.audio = res.data.data[0];
+        this.$store.state.src = res.data.data[0].url;
       });
     },
-    playaudio(id) {
+    play(id) {
       this.getsongurl(id);
-      let audio = document.getElementsByClassName("audio")[0];
-      if (audio !== null) {
-        //检测播放是否已暂停.audio.paused 在播放器播放时返回false.
-        // console.log(audio.paused);
-        if (audio.paused) {
-          audio.play(); //audio.play();// 这个就是播放
-          this.$toast.success("开始播放");
-        } else {
-          audio.pause(); // 这个就是暂停
-          this.$toast.fail("暂停播放");
-        }
-      }
+      this.playaudio(id);
     },
     // 返回
     onClickLeft() {
@@ -116,6 +109,10 @@ export default {
       });
     } else {
       return;
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.$refs.audio.paused == false) {
     }
   }
 };
@@ -162,7 +159,7 @@ span {
 }
 .playcount {
   color: #fff;
-  font-size: 0.4rem;
+  font-size: 0.8rem;
 }
 .playcount i {
   color: #fff;
@@ -188,9 +185,9 @@ span {
 /* 歌曲 */
 .song {
   width: 100%;
-  margin-top: 1.1rem;
+  margin-top: 6px;
   background: #ffffff;
-  border-radius: 2rem;
+  border-radius: 1rem;
   opacity: 0.9;
 }
 .play {
@@ -216,8 +213,8 @@ span {
   width: 100%;
   height: 3rem;
   margin-top: 2rem;
-  border-radius: 1rem;
-  border-bottom: 0.2rem solid rgb(60, 43, 214);
+  border-radius: 5px;
+  border-bottom: 2px solid #ccc;
 }
 .list:hover {
   background: linear-gradient(45deg, #f40, skyblue);
@@ -227,7 +224,7 @@ span {
   flex: 2;
 }
 .id {
-  flex: 2;
+  flex: 1;
   font-size: 0.6rem;
   color: #000;
   margin-left: 1rem;
