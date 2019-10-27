@@ -39,6 +39,9 @@ export default {
 };
 </script>
 <style scoped>
+#songer{
+  margin-top: -2rem;
+}
 .wrap {
   display: flex;
   justify-content: space-around;
