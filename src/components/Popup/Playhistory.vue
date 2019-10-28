@@ -4,7 +4,7 @@
       <div class="title">列表总数:({{length}}首)</div>
     </div>
     <div class="song" v-for="(item,index) in detail" :key="index">
-      <div class="name">{{item}}</div>
+      <div class="name" @click="play(item.id)">{{item.name}}</div>
       <van-icon name="cross" @click="remove" :data-index="index" />
     </div>
   </div>
@@ -20,26 +20,40 @@ export default {
       length: ""
     };
   },
-  inject: ["refooter"],
+  inject: ["iffooter", "playaudio", "refooter"],
   methods: {
     // 移除播放列表
     remove(e) {
       let index = e.target.dataset.index;
       this.song.splice(index, 1);
       let songid = JSON.stringify(this.song);
-      localStorage.setItem("songid", songid);
+      sessionStorage.setItem("songid", songid);
       this.refooter();
       this.getid;
+    },
+    // 音乐url
+    getsongurl(id) {
+      this.axios.get("/song/url?id=" + id).then(res => {
+        this.$store.state.src = res.data.data[0].url;
+      });
+    },
+    play(id) {
+      this.getsongurl(id);
+      this.playaudio(id);
     }
   },
   computed: {
+    // 获取播放列表信息
     getid() {
-      this.song = JSON.parse(localStorage.getItem("songid"));
+      this.song = JSON.parse(sessionStorage.getItem("songid"));
       this.length = this.song.length;
       for (let i = 0; i < this.length; i++) {
         let playid = this.song[i];
         this.axios.get("/song/detail?ids=" + playid).then(res => {
-          this.detail.push(res.data.songs[0].name);
+          this.detail.push({
+            name: res.data.songs[0].name,
+            id: res.data.songs[0].id
+          });
         });
       }
     }

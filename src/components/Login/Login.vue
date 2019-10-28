@@ -62,9 +62,9 @@ export default {
           )
           .then(res => {
             this.$store.state.uid = res.data.account.id;
-            // 存入localStorage 防止刷新数据消失
+            // 存入sessionStorage 防止刷新数据消失
             let id = JSON.stringify(res.data.account.id);
-            localStorage.setItem("uid", id);
+            sessionStorage.setItem("uid", id);
             this.$dialog
               .alert({
                 message: "登录成功!"

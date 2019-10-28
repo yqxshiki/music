@@ -17,7 +17,9 @@ export default new Vuex.Store({
             currentTime: 0,
             maxTime: 0,
             minTime: 0
-        }
+        },
+        // 当前播放音乐ID
+        current: ""
     },
     getters: {
     },

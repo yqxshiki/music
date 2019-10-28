@@ -69,7 +69,7 @@ export default {
           cancelButtonText: "取消" //改变取消按钮上显示的文字
         })
         .then(() => {
-          localStorage.removeItem("uid");
+          sessionStorage.removeItem("uid");
           this.reload();
           this.$router.push("/login");
         })
@@ -77,7 +77,7 @@ export default {
     },
     // 获取用户信息
     getuser() {
-      if (!JSON.parse(localStorage.getItem("uid"))) {
+      if (!JSON.parse(sessionStorage.getItem("uid"))) {
         // 默认，无登录时
         this.$refs.img.src =
           "https://blog-1259178461.cos.ap-chengdu.myqcloud.com/vue-music/default.jpg";
@@ -88,7 +88,7 @@ export default {
         });
       } else {
         if (this.$store.state.uid == "") {
-          this.$store.state.uid = JSON.parse(localStorage.getItem("uid"));
+          this.$store.state.uid = JSON.parse(sessionStorage.getItem("uid"));
         }
         // 取vuex的id获取信息
         this.axios

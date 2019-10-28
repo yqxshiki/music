@@ -45,7 +45,7 @@ export default {
   computed: {
     // 获取用户信息
     getuser() {
-      if (!localStorage.getItem("uid")) {
+      if (!sessionStorage.getItem("uid")) {
         this.$dialog
           .alert({
             message: "您还没有登录,请登录!!"
@@ -55,7 +55,7 @@ export default {
           });
       }
       if (this.$store.state.uid == "") {
-        this.$store.state.uid = JSON.parse(localStorage.getItem("uid"));
+        this.$store.state.uid = JSON.parse(sessionStorage.getItem("uid"));
       }
       this.axios
         .get("/user/playlist?uid=" + this.$store.state.uid)

@@ -6,7 +6,7 @@
       </div>
       <div class="geming" ref="name">{{detail.name}}</div>
       <div class="playicon">
-        <i class="iconfont" id="playicon" @click="playaudiofooter">&#xe612;</i>
+        <i class="iconfont" id="playicon" @click="playaudiofooter">&#xe68e;</i>
       </div>
       <div class="liebiao">
         <i class="iconfont" @click="showPopup">&#xe609;</i>
@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       // 从vuex获取id
-      songsid: [],
+      current: [],
       detail: "",
       imgurl: "",
       show: false,
@@ -47,7 +47,7 @@ export default {
       if (audio !== null) {
         //检测播放是否已暂停.
         if (audio.paused) {
-          if (JSON.parse(localStorage.getItem("songid")).length !== 0) {
+          if (JSON.parse(sessionStorage.getItem("songid")).length !== 0) {
             let playpromise = audio.play();
             if (playpromise == undefined) {
               playpromise
@@ -86,24 +86,29 @@ export default {
     // 获取信息
     getimg() {
       // 默认
-      if (JSON.parse(localStorage.getItem("songid")).length == 0) {
+      if (JSON.parse(sessionStorage.getItem("songid")).length == 0) {
         this.$refs.img.src =
           "https://hexophoto-1259178461.cos.ap-beijing.myqcloud.com/photos/6.jpg";
         this.$refs.name.innerHTML = "请播放歌曲!";
       } else {
-        this.songsid = JSON.parse(localStorage.getItem("songid"));
-        let length = this.songsid.length;
+        // 显示当前播放歌曲信息
+        this.current = JSON.parse(sessionStorage.getItem("current"));
         // 获取歌曲信息
-        this.axios
-          .get("/song/detail?ids=" + this.songsid[length - 1])
-          .then(res => {
-            this.detail = res.data.songs[0];
-            this.imgurl = this.detail.al;
-          });
+        this.axios.get("/song/detail?ids=" + this.current).then(res => {
+          this.detail = res.data.songs[0];
+          this.imgurl = this.detail.al;
+        });
       }
     }
   },
   mounted() {
+    let audio = document.getElementsByClassName("audio")[0];
+    let playicon = document.getElementById("playicon");
+    if (audio.paused) {
+      playicon.innerHTML = "&#xe612;";
+    } else {
+      playicon.innerHTML = "&#xe68e;";
+    }
     this.getimg;
   }
 };

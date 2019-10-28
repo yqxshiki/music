@@ -41,7 +41,7 @@ github地址[点击进入](https://github.com/yqxshiki/music)
 
 在App.vue里面调用,会根据用户当前播放的歌曲进行调整
 
-### 登录,注册(手机号登录,信息存入localStorage和Vuex)
+### 登录,注册(手机号登录,信息存入sessionStorage和Vuex)
 
 **登录账号是网易云的账号**
 
@@ -61,9 +61,9 @@ github地址[点击进入](https://github.com/yqxshiki/music)
           )
           .then(res => {
             this.$store.state.uid = res.data.account.id;
-            // 存入localStorage 防止刷新数据消失
+            // 存入sessionStorage 防止刷新数据消失
             let id = JSON.stringify(res.data.account.id);
-            localStorage.setItem("uid", id);
+            sessionStorage.setItem("uid", id);
             this.$dialog
               .alert({
                 message: "登录成功!"

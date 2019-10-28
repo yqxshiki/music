@@ -15,10 +15,10 @@ const router = new Router({
             redirect: "/sheet",
             // 避免用户在第一次使用时,没有songid而报错
             beforeEnter: (to, from, next) => {
-                if (!localStorage.getItem("songid")) {
+                if (!sessionStorage.getItem("songid")) {
                     let songid = [];
                     songid = JSON.stringify(songid);
-                    localStorage.setItem("songid", songid);
+                    sessionStorage.setItem("songid", songid);
                 };
                 next();
             }, children: [

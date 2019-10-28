@@ -50,24 +50,37 @@ export default {
             audio.src = this.$store.state.src;
             if (audio !== null) {
               if (audio.paused) {
-                audio.play();
+                let playpromise = audio.play();
+                if (playpromise == undefined) {
+                  playpromise
+                    .then(() => {
+                      audio.play();
+                    })
+                    .catch(err => {
+                      console.log(err);
+                    });
+                }
                 playicon.innerHTML = "&#xe68e;";
                 this.$toast.success("开始播放");
                 // 数字变成字符串
                 let gid = id.toString();
-                //把播放过的歌曲id 存入localStorage
+                //把播放过的歌曲id 存入sessionStorage
                 //防止页面刷新后vuex里面的数据消失
                 if (this.$store.state.songid.length == 0) {
                   this.$store.state.songid = JSON.parse(
-                    localStorage.getItem("songid")
+                    sessionStorage.getItem("songid")
                   );
                 }
                 //点击同一首歌，不添加
                 if (this.$store.state.songid.indexOf(gid) == -1) {
                   this.$store.state.songid.push(gid);
                   let songid = JSON.stringify(this.$store.state.songid);
-                  localStorage.setItem("songid", songid);
+                  sessionStorage.setItem("songid", songid);
                 }
+                // 保存播放的id
+                this.$store.state.current = gid;
+                let current = JSON.stringify(this.$store.state.current);
+                sessionStorage.setItem("current", current);
                 this.iffooter();
               } else {
                 audio.pause();

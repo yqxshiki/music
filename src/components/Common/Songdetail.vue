@@ -171,18 +171,18 @@ export default {
           }
           e.target.innerHTML = "&#xe68e;";
           this.$toast.success("开始播放");
-          //把播放过的歌曲id 存入localStorage
+          //把播放过的歌曲id 存入sessionStorage
           //防止页面刷新后vuex里面的数据消失
           if (this.$store.state.songid.length == 0) {
             this.$store.state.songid = JSON.parse(
-              localStorage.getItem("songid")
+              sessionStorage.getItem("songid")
             );
           }
           //点击同一首歌，不添加
           if (this.$store.state.songid.indexOf(this.$route.params.id) == -1) {
             this.$store.state.songid.push(this.$route.params.id);
             let songid = JSON.stringify(this.$store.state.songid);
-            localStorage.setItem("songid", songid);
+            sessionStorage.setItem("songid", songid);
           }
         } else {
           audio.pause(); // 这个就是暂停
