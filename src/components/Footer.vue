@@ -2,7 +2,9 @@
   <div id="appfooter">
     <div class="wrap">
       <div class="image">
-        <img :src="imgurl.picUrl" ref="img" alt />
+        <router-link :to="'/songdetail/'+detail.id">
+          <img :src="imgurl.picUrl" ref="img" alt />
+        </router-link>
       </div>
       <div class="geming" ref="name">{{detail.name}}</div>
       <div class="playicon">
@@ -49,20 +51,19 @@ export default {
         if (audio.paused) {
           if (JSON.parse(sessionStorage.getItem("songid")).length !== 0) {
             let playpromise = audio.play();
-            if (playpromise == undefined) {
-              playpromise
+            if (playPromise) {
+              playPromise
                 .then(() => {
-                  audio.play();
+                  setTimeout(() => {
+                    e.target.innerHTML = "&#xe68e;";
+                    this.$toast.success("开始播放");
+                  }, 2000);
                 })
-                .catch(err => {
-                  console.log(err);
-                });
+                .catch(e => {});
             }
           } else {
             this.$toast("当前列表没有歌曲,请去其他位置听歌");
           }
-          e.target.innerHTML = "&#xe68e;";
-          this.$toast.success("开始播放");
         } else {
           audio.pause();
           e.target.innerHTML = "&#xe612;";

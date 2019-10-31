@@ -51,17 +51,18 @@ export default {
             if (audio !== null) {
               if (audio.paused) {
                 let playpromise = audio.play();
-                if (playpromise == undefined) {
+                if (playpromise) {
                   playpromise
                     .then(() => {
-                      audio.play();
+                      setTimeout(() => {
+                        playicon.innerHTML = "&#xe68e;";
+                        this.$toast.success("开始播放");
+                      }, 2000);
                     })
                     .catch(err => {
                       console.log(err);
                     });
                 }
-                playicon.innerHTML = "&#xe68e;";
-                this.$toast.success("开始播放");
                 // 数字变成字符串
                 let gid = id.toString();
                 //把播放过的歌曲id 存入sessionStorage
