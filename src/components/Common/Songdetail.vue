@@ -1,62 +1,35 @@
 <template>
   <div id="songdetail">
-    <navigation :title="title" />
+    <van-nav-bar title="歌词" left-text="首页" left-arrow @click-left="onClickLeft" />
     <div class="wrap">
       <div class="ul" ref="ul">
-        <div class="word" ref="word" v-for="(item,index) in word" :key="index">
-          <p ref="p">{{item.words}}</p>
-        </div>
+        <p class="p" ref="p" v-for="(item,index) in word" :key="index">{{item.words}}</p>
       </div>
     </div>
     <div class="progressbar" @click="click">
       <van-progress color="#ee0a24" :percentage="playtime" :show-pivot="false" />
     </div>
-    <audio
-      class="audio"
-      ref="audios"
-      loop="loop"
-      :src="audiourl.url"
-      @timeupdate="onTimeupdate"
-      @loadedmetadata="onLoadedmetadata"
-    ></audio>
     <div class="bottom">
       <i class="iconfont">&#xe698;</i>
-      <i class="iconfont" @click="playaudio">&#xe612;</i>
+      <i class="iconfont" @click="play" ref="iconfont">&#xe612;</i>
       <i class="iconfont">&#xe611;</i>
     </div>
   </div>
 </template>
 
 <script>
-import navigation from "./Navigation";
 export default {
   name: "songdetail",
-  components: {
-    navigation
-  },
   data() {
     return {
-      title: "歌词",
       word: [],
       songarr: [],
-      audiourl: "",
       i: "",
-      audio: {
-        currentTime: 0,
-        maxTime: 0,
-        minTime: 0
-      },
       // 进度条
       playtime: 0
     };
   },
   methods: {
-    // 音乐url
-    getsongurl(id) {
-      this.axios.get("/song/url?id=" + id).then(res => {
-        this.audiourl = res.data.data[0];
-      });
-    },
     getword(id) {
       this.axios
         .get("/lyric?id=" + id)
@@ -91,11 +64,10 @@ export default {
     },
     getindex() {
       // 获取当前播放时间
-      let playtime = this.$refs.audios.currentTime;
-      let playtimes = playtime + 0.7;
+      let playtime = this.$store.state.audio.currentTime;
       for (var i = this.songarr.length - 1; i > 0; i--) {
         var liobject = this.songarr[i];
-        if (playtimes >= liobject.time) {
+        if (playtime >= liobject.time) {
           return i;
         }
       }
@@ -105,12 +77,12 @@ export default {
       // 动态添加class
       let index = this.getindex();
       let ul = document.querySelector(".ul");
-      let p = ul.querySelector(".active");
+      let p = document.querySelector(".active");
       if (p) {
         p.className = "";
       }
       if (index !== -1) {
-        this.$refs.p[index].className = "active";
+        ul.children[index].className = "active";
       }
       // 歌词滚动
       let config = {
@@ -123,66 +95,43 @@ export default {
       if (margintop > 0) {
         margintop = 0;
       }
-      this.$refs.ul.style.marginTop = margintop + "px";
-    },
-    // 更新进度条
-    onTimeupdate(res) {
-      // 播放时间
-      this.audio.currentTime = res.target.currentTime;
-      this.setroll();
-      // 更新进度条距离
-      this.playtime = parseInt(
-        (this.audio.currentTime / this.audio.maxTime) * 100
-      );
-    },
-    // 获取歌曲总时长
-    onLoadedmetadata(res) {
-      this.audio.maxTime = parseInt(res.target.duration);
+      ul.style.marginTop = margintop + "px";
     },
     // 移动进度条
     click(res) {
+      let audio = document.getElementsByClassName("audio")[0];
       // 当前点击距离
       let clicktime = res.clientX;
       // 进度条距离
       this.playtime = parseInt((clicktime / 375) * 100);
       // 更新播放时间
-      this.$refs.audios.currentTime = parseInt(
-        (this.playtime / 100) * this.audio.maxTime
+      audio.currentTime = parseInt(
+        (this.playtime * this.$store.state.audio.maxTime) / 100
       );
       this.setroll();
     },
     // 播放
-    playaudio(e) {
-      let audio1 = document.getElementsByClassName("audio")[0];
-      audio1.pause();
-      let audio = document.getElementsByClassName("audio")[1];
+    play(e) {
+      let audio = document.getElementsByClassName("audio")[0];
       if (audio !== null) {
-        //检测播放是否已暂停.audio.paused 在播放器播放时返回true
+        //检测播放是否已暂停
         if (audio.paused) {
           let playpromise = audio.play();
-          if (playpromise == undefined) {
+          if (playpromise) {
             playpromise
               .then(() => {
-                audio.play();
+                setTimeout(() => {
+                  e.target.innerHTML = "&#xe68e;";
+                  this.$toast.success("开始播放");
+                }, 2000);
               })
               .catch(err => {
                 console.log(err);
+                this.$notify({
+                  type: "danger",
+                  message: "该资源无法加载,请选择别的歌曲"
+                });
               });
-          }
-          e.target.innerHTML = "&#xe68e;";
-          this.$toast.success("开始播放");
-          //把播放过的歌曲id 存入sessionStorage
-          //防止页面刷新后vuex里面的数据消失
-          if (this.$store.state.songid.length == 0) {
-            this.$store.state.songid = JSON.parse(
-              sessionStorage.getItem("songid")
-            );
-          }
-          //点击同一首歌，不添加
-          if (this.$store.state.songid.indexOf(this.$route.params.id) == -1) {
-            this.$store.state.songid.push(this.$route.params.id);
-            let songid = JSON.stringify(this.$store.state.songid);
-            sessionStorage.setItem("songid", songid);
           }
         } else {
           audio.pause(); // 这个就是暂停
@@ -190,22 +139,27 @@ export default {
           this.$toast.fail("暂停播放");
         }
       }
+    },
+    // 返回首页
+    onClickLeft() {
+      this.$router.push("/sheet");
     }
   },
   mounted() {
-    this.getsongurl(this.$route.params.id);
     this.getword(this.$route.params.id);
-  },
-  beforeRouteLeave(to, from, next) {
-    // 退出前关闭播放
-    if (this.$refs.audios.paused == false) {
-      this.$refs.audios.pause();
+
+    let audio = document.getElementsByClassName("audio")[0];
+    if (audio.paused == false) {
+      this.$refs.iconfont.innerHTML = "&#xe68e;";
     }
-    // 防止在退出时,还在调用currentTime
-    setTimeout(() => {
-      this.$store.state.footer = true;
-      next();
-    }, 100);
+    const timer = setInterval(() => {
+      this.setroll();
+      this.playtime = this.$store.state.playtime;
+    }, 2500);
+    // 销毁
+    this.$once("hook:beforeDestroy", () => {
+      clearInterval(timer);
+    });
   }
 };
 </script>
@@ -223,11 +177,11 @@ export default {
   height: 500px;
   overflow-x: hidden;
 }
-.word {
-  padding-top: 10px;
-}
 .ul {
   transition: 0.7s;
+}
+p {
+  padding-top: 10px;
 }
 .active {
   font-size: 1.2rem;

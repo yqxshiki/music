@@ -7,6 +7,7 @@ export default new Vuex.Store({
     state: {
         // 判断底部播放是否加载
         footer: true,
+        showfooter:true,
         // 登录信息
         uid: 0,
         // 歌曲id
@@ -18,6 +19,8 @@ export default new Vuex.Store({
             maxTime: 0,
             minTime: 0
         },
+        // 进度条
+        playtime:0,
         // 当前播放音乐ID
         current: ""
     },

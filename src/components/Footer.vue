@@ -8,7 +8,7 @@
       </div>
       <div class="geming" ref="name">{{detail.name}}</div>
       <div class="playicon">
-        <i class="iconfont" id="playicon" @click="playaudiofooter">&#xe68e;</i>
+        <i class="iconfont" id="playicon" @click="playaudiofooter">&#xe612;</i>
       </div>
       <div class="liebiao">
         <i class="iconfont" @click="showPopup">&#xe609;</i>
@@ -59,7 +59,9 @@ export default {
                     this.$toast.success("开始播放");
                   }, 2000);
                 })
-                .catch(e => {});
+                .catch(err => {
+                  console.log(err);
+                });
             }
           } else {
             this.$toast("当前列表没有歌曲,请去其他位置听歌");
@@ -106,8 +108,10 @@ export default {
     let audio = document.getElementsByClassName("audio")[0];
     let playicon = document.getElementById("playicon");
     if (audio.paused) {
+      // 暂停
       playicon.innerHTML = "&#xe612;";
     } else {
+      //播放
       playicon.innerHTML = "&#xe68e;";
     }
     this.getimg;

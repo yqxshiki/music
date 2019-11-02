@@ -13,9 +13,9 @@
           <div class="singer">{{item.ar[0].name}}--{{item.al.name}}</div>
         </div>
         <div class="meun">
-          <router-link :to="'/songdetail/'+item.id">
+          <!-- <router-link :to="'/songdetail/'+item.id"> -->
             <van-icon name="ellipsis" class="ellipsis" />
-          </router-link>
+          <!-- </router-link> -->
         </div>
       </div>
     </transition-group>

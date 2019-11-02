@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <appfooter v-show="footer" v-if="showfooter" />
+    <appfooter v-if="showfooter" />
     <audio
       class="audio"
       ref="audio"
@@ -22,7 +22,6 @@ export default {
   data() {
     return {
       isShow: true,
-      footer: true,
       showfooter: true
     };
   },
@@ -61,6 +60,10 @@ export default {
                     })
                     .catch(err => {
                       console.log(err);
+                      this.$notify({
+                        type: "danger",
+                        message: "该资源无法加载,请选择别的歌曲"
+                      });
                     });
                 }
                 // 数字变成字符串
@@ -95,10 +98,19 @@ export default {
     };
   },
   methods: {
-    onTimeupdate(res) {},
+    // 记录播放时间
+    onTimeupdate(res) {
+      this.$store.state.audio.currentTime = res.target.currentTime;
+      this.$store.state.playtime = parseInt(
+        (this.$store.state.audio.currentTime /
+          this.$store.state.audio.maxTime) *
+          100
+      );
+    },
     // 获取歌曲总时长
-    onLoadedmetadata(res) {},
-    // 刷新主页面
+    onLoadedmetadata(res) {
+      this.$store.state.audio.maxTime = parseInt(res.target.duration);
+    },
     reload() {
       this.isShow = false;
       // $nextTick() 将回调延迟到下次 DOM 更新循环之后执行
@@ -115,7 +127,7 @@ export default {
     }
   },
   updated() {
-    this.footer = this.$store.state.footer;
+    this.showfooter = this.$store.state.showfooter;
   }
 };
 </script>

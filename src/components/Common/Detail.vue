@@ -39,9 +39,9 @@
               <div class="songer">{{item.ar[0].name}}--{{item.al.name}}</div>
             </div>
             <div class="meun">
-              <router-link :to="'/songdetail/'+item.id">
-                <van-icon name="ellipsis" class="ellipsis" />
-              </router-link>
+              <!-- <router-link :to="'/songdetail/'+item.id"> -->
+              <van-icon name="ellipsis" class="ellipsis" />
+              <!-- </router-link> -->
             </div>
           </div>
         </transition-group>
@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import { filter } from "minimatch";
 export default {
   name: "detail",
   data() {
@@ -109,10 +108,6 @@ export default {
       });
     } else {
       return;
-    }
-  },
-  beforeRouteLeave(to, from, next) {
-    if (this.$refs.audio.paused == false) {
     }
   }
 };

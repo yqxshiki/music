@@ -1,7 +1,7 @@
 <template>
   <div id="login">
     <navigation :title="title" />
-    
+
     <div class="img">
       <img src="../../assets/e.jpg" />
     </div>

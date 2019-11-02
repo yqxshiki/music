@@ -23,9 +23,9 @@
         <div class="songer">{{item.artists[0].name}}--{{item.album.name}}</div>
       </div>
       <div class="details">
-        <router-link :to="'/songdetail/'+item.id">
-          <van-icon name="ellipsis" class="ellipsis" />
-        </router-link>
+        <!-- <router-link :to="'/songdetail/'+item.id"> -->
+        <van-icon name="ellipsis" class="ellipsis" />
+        <!-- </router-link> -->
       </div>
     </div>
   </div>

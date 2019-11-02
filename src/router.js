@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from './store'
-import { format } from 'url'
 
 Vue.use(store)
 Vue.use(Router)
@@ -50,7 +49,7 @@ const router = new Router({
             path: "/songdetail/:id",
             component: () => import("./components/Common/Songdetail.vue"),
             beforeEnter: (to, from, next) => {
-                store.state.footer = false
+                store.state.showfooter = false
                 next();
             }
         },
@@ -76,7 +75,7 @@ const router = new Router({
         { path: "/videoplay2/:id", component: () => import("./components/Common/Videoplay2.vue") },
         // 搜索
         { path: "/search", component: () => import("./components/Search/Search.vue") },
-        { path: "/search/:vaule", component: () => import("./components/Search/Display.vue") },
+        { path: "/search/:vaule", name: "searchdetail", component: () => import("./components/Search/Display.vue") },
         // 404
         { path: "/error", component: () => import("./components/Error.vue") },
         { path: "/login", component: () => import("./components/Login/Login.vue") },
@@ -86,11 +85,11 @@ const router = new Router({
     ]
 })
 router.beforeEach((to, from, next) => {
-    if (to.path == "/login" || to.path == "/register" || to.path == "/error" || to.path == "/about") {
-        store.state.footer = false
+    if (to.path == "/login" || to.path == "/register" || to.path == "/error" || to.path == "/about" || to.path == "/search" || to.name == "searchdetail") {
+        store.state.showfooter = false
         next();
     } else {
-        store.state.footer = true
+        store.state.showfooter = true
         next();
     }
 })
