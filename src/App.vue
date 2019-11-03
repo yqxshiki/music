@@ -1,12 +1,11 @@
 <template>
   <div id="app">
     <appfooter v-if="showfooter" />
-    <audio
-      class="audio"
-      ref="audio"
-      loop
-      @timeupdate="onTimeupdate"
-      @loadedmetadata="onLoadedmetadata"
+    <audio 
+    class="audio" 
+    ref="audio" 
+    @timeupdate="onTimeupdate" 
+    @loadedmetadata="onLoadedmetadata"
     ></audio>
     <router-view v-if="isShow"></router-view>
   </div>
