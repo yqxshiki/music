@@ -118,7 +118,7 @@ export default {
 .count {
   font-size: 0.5rem;
   position: absolute;
-  right: -1px;
+  right: 10px;
   top: 18px;
   color: #ffffff;
 }

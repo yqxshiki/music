@@ -4,7 +4,7 @@
       <div class="title">列表总数:({{length}}首)</div>
     </div>
     <div class="song" v-for="(item,index) in detail" :key="index">
-      <div class="name" @click="play(item.id)">{{item.name}}</div>
+      <div class="name" @click="play(item.id,detail)">{{item.name}}</div>
       <van-icon name="cross" @click="remove" :data-index="index" />
     </div>
   </div>
@@ -37,9 +37,9 @@ export default {
         this.$store.state.src = res.data.data[0].url;
       });
     },
-    play(id) {
+    play(id, detail) {
       this.getsongurl(id);
-      this.playaudio(id);
+      this.playaudio(id, detail);
     }
   },
   computed: {

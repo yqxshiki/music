@@ -32,7 +32,7 @@
         <div class="list" v-for="(item,index) in songs" :key="index">
           <div class="id">{{index+1}}</div>
 
-          <div class="dansong" @click="play(item.id)">
+          <div class="dansong" @click="play(item.id,songs)">
             <div class="name">{{item.name}}</div>
             <div class="songer">{{item.ar[0].name}}--{{item.al.name}}</div>
           </div>
@@ -75,9 +75,9 @@ export default {
         this.$store.state.src = res.data.data[0].url;
       });
     },
-    play(id) {
+    play(id, songs) {
       this.getsongurl(id);
-      this.playaudio(id);
+      this.playaudio(id, songs);
     },
     getalbum(id) {
       this.axios.get("/album?id=" + id).then(res => {

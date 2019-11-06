@@ -8,13 +8,13 @@
     >
       <div class="wrap" v-for="(item,index) in songs" :key="index">
         <div class="index">{{index+1}}</div>
-        <div class="song" @click="play(item.id)">
+        <div class="song" @click="play(item.id,songs)">
           <div class="name">{{item.name}}</div>
           <div class="singer">{{item.ar[0].name}}--{{item.al.name}}</div>
         </div>
         <div class="meun">
           <!-- <router-link :to="'/songdetail/'+item.id"> -->
-            <van-icon name="ellipsis" class="ellipsis" />
+          <van-icon name="ellipsis" class="ellipsis" />
           <!-- </router-link> -->
         </div>
       </div>
@@ -44,9 +44,9 @@ export default {
         this.$store.state.src = res.data.data[0].url;
       });
     },
-    play(id) {
+    play(id, songs) {
       this.getsongurl(id);
-      this.playaudio(id);
+      this.playaudio(id, songs);
     }
   },
   mounted() {

@@ -34,7 +34,7 @@
           <div class="list" v-for="(item,index) in song" :key="index">
             <div class="id">{{index+1}}</div>
 
-            <div class="dansong" @click="play(item.id)">
+            <div class="dansong" @click="play(item.id,song)">
               <div class="name">{{item.name}}</div>
               <div class="songer">{{item.ar[0].name}}--{{item.al.name}}</div>
             </div>
@@ -83,9 +83,9 @@ export default {
         this.$store.state.src = res.data.data[0].url;
       });
     },
-    play(id) {
+    play(id,song) {
       this.getsongurl(id);
-      this.playaudio(id);
+      this.playaudio(id,song);
     },
     // 返回
     onClickLeft() {

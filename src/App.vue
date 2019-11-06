@@ -1,12 +1,7 @@
 <template>
   <div id="app">
     <appfooter v-if="showfooter" />
-    <audio 
-    class="audio" 
-    ref="audio" 
-    @timeupdate="onTimeupdate" 
-    @loadedmetadata="onLoadedmetadata"
-    ></audio>
+    <audio class="audio" ref="audio" @timeupdate="onTimeupdate" @loadedmetadata="onLoadedmetadata"></audio>
     <router-view v-if="isShow"></router-view>
   </div>
 </template>
@@ -21,7 +16,7 @@ export default {
   data() {
     return {
       isShow: true,
-      showfooter: true
+      showfooter: false
     };
   },
   // 提供可注入子组件属性
@@ -29,7 +24,7 @@ export default {
     return {
       reload: this.reload,
       iffooter: this.iffooter,
-      playaudio(id) {
+      playaudio(id, song) {
         setTimeout(() => {
           let audio = document.getElementsByClassName("audio")[0];
           let playicon = document.getElementById("playicon");
@@ -53,8 +48,10 @@ export default {
                   playpromise
                     .then(() => {
                       setTimeout(() => {
-                        playicon.innerHTML = "&#xe68e;";
-                        this.$toast.success("开始播放");
+                        if (this.$store.state.showfooter ===true) {
+                          playicon.innerHTML = "&#xe68e;";
+                          this.$toast.success("开始播放");
+                        }
                       }, 2000);
                     })
                     .catch(err => {
@@ -67,24 +64,27 @@ export default {
                 }
                 // 数字变成字符串
                 let gid = id.toString();
-                //把播放过的歌曲id 存入sessionStorage
-                //防止页面刷新后vuex里面的数据消失
-                if (this.$store.state.songid.length == 0) {
-                  this.$store.state.songid = JSON.parse(
-                    sessionStorage.getItem("songid")
-                  );
-                }
-                //点击同一首歌，不添加
-                if (this.$store.state.songid.indexOf(gid) == -1) {
-                  this.$store.state.songid.push(gid);
-                  let songid = JSON.stringify(this.$store.state.songid);
-                  sessionStorage.setItem("songid", songid);
-                }
+                //每次点击播放都去除当前播放列表
+                sessionStorage.removeItem("songid");
+                this.$store.state.songid = [];
+                // 把当前播放的歌单存入到vuex 显示到播放列表
+                sessionStorage.setItem("song", JSON.stringify(song));
+                let songlist = song.map((item, index, arr) => {
+                  return item.id.toString();
+                });
+                let list = songlist.map((item, index, arr) => {
+                  this.$store.state.songid.push(item);
+                });
+                let songid = JSON.stringify(this.$store.state.songid);
+                sessionStorage.setItem("songid", songid);
+
                 // 保存播放的id
                 this.$store.state.current = gid;
                 let current = JSON.stringify(this.$store.state.current);
                 sessionStorage.setItem("current", current);
-                this.iffooter();
+                if (this.$store.state.showfooter === true) {
+                  this.iffooter();
+                }
               } else {
                 audio.pause();
                 playicon.innerHTML = "&#xe612;";

@@ -10,9 +10,9 @@
       <van-progress color="#ee0a24" :percentage="playtime" :show-pivot="false" />
     </div>
     <div class="bottom">
-      <i class="iconfont">&#xe698;</i>
+      <i class="iconfont" @click="before">&#xe698;</i>
       <i class="iconfont" @click="play" ref="iconfont">&#xe612;</i>
-      <i class="iconfont">&#xe611;</i>
+      <i class="iconfont" @click="next">&#xe611;</i>
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@ export default {
       playtime: 0
     };
   },
+  inject: ["reload", "playaudio"],
   methods: {
     getword(id) {
       this.axios
@@ -140,6 +141,53 @@ export default {
         }
       }
     },
+    //上一曲
+    before() {
+      let audio = document.getElementsByClassName("audio")[0];
+      audio.pause();
+      let nowid = JSON.parse(sessionStorage.getItem("current"));
+      let number = this.$store.state.songid.indexOf(nowid);
+      let song = JSON.parse(sessionStorage.getItem("song"));
+      console.log(song);
+      if (number == 1) {
+        number = song.length - 1;
+      } else {
+        number = number - 1;
+      }
+      let id = Number(this.$store.state.songid[number]);
+      setTimeout(() => {
+        this.getsongurl(id);
+        this.playaudio(id, song);
+        this.getword(id);
+        this.$store.state.showfooter = false;
+      }, 1000);
+    },
+    // 下一曲
+    next() {
+      let audio = document.getElementsByClassName("audio")[0];
+      audio.pause();
+      let nowid = JSON.parse(sessionStorage.getItem("current"));
+      let number = this.$store.state.songid.indexOf(nowid);
+      let song = JSON.parse(sessionStorage.getItem("song"));
+      if (number == song.length - 1) {
+        number = 0;
+      } else {
+        number = number + 1;
+      }
+      let id = Number(this.$store.state.songid[number]);
+      setTimeout(() => {
+        this.getsongurl(id);
+        this.playaudio(id, song);
+        this.getword(id);
+        this.$store.state.showfooter = false;
+      }, 1000);
+    },
+    // 音乐url
+    getsongurl(id) {
+      this.axios.get("/song/url?id=" + id).then(res => {
+        this.$store.state.src = res.data.data[0].url;
+      });
+    },
     // 返回首页
     onClickLeft() {
       this.$router.push("/sheet");
@@ -155,7 +203,7 @@ export default {
     const timer = setInterval(() => {
       this.setroll();
       this.playtime = this.$store.state.playtime;
-    }, 2500);
+    }, 2000);
     // 销毁
     this.$once("hook:beforeDestroy", () => {
       clearInterval(timer);
@@ -197,7 +245,7 @@ p {
   }
 
   100% {
-    background-position: left 400px top 0px;
+    background-position: left 800px top 0px;
   }
 }
 /* 进度条 */
