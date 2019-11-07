@@ -1,6 +1,6 @@
 <template>
   <div id="songdetail">
-    <van-nav-bar title="歌词" left-text="首页" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar :title="title" left-text="首页" left-arrow @click-left="onClickLeft" />
     <div class="wrap">
       <div class="ul" ref="ul">
         <p class="p" ref="p" v-for="(item,index) in word" :key="index">{{item.words}}</p>
@@ -11,7 +11,7 @@
     </div>
     <div class="bottom">
       <i class="iconfont" @click="before">&#xe698;</i>
-      <i class="iconfont" @click="play" ref="iconfont">&#xe612;</i>
+      <i class="iconfont" @click="play" ref="iconfont">&#xe68e;</i>
       <i class="iconfont" @click="next">&#xe611;</i>
     </div>
   </div>
@@ -25,6 +25,8 @@ export default {
       word: [],
       songarr: [],
       i: "",
+      // 歌曲名
+      title: "",
       // 进度条
       playtime: 0
     };
@@ -88,7 +90,7 @@ export default {
       // 歌词滚动
       let config = {
         ulheight: 500,
-        liheight: 44
+        liheight: 33
       };
       var midHeight = config.ulheight / 2 - config.liheight / 2;
       var margintop = midHeight - index * config.liheight;
@@ -148,7 +150,6 @@ export default {
       let nowid = JSON.parse(sessionStorage.getItem("current"));
       let number = this.$store.state.songid.indexOf(nowid);
       let song = JSON.parse(sessionStorage.getItem("song"));
-      console.log(song);
       if (number == 1) {
         number = song.length - 1;
       } else {
@@ -157,6 +158,7 @@ export default {
       let id = Number(this.$store.state.songid[number]);
       setTimeout(() => {
         this.getsongurl(id);
+        this.getdetail(id);
         this.playaudio(id, song);
         this.getword(id);
         this.$store.state.showfooter = false;
@@ -177,6 +179,7 @@ export default {
       let id = Number(this.$store.state.songid[number]);
       setTimeout(() => {
         this.getsongurl(id);
+        this.getdetail(id);
         this.playaudio(id, song);
         this.getword(id);
         this.$store.state.showfooter = false;
@@ -191,19 +194,27 @@ export default {
     // 返回首页
     onClickLeft() {
       this.$router.push("/sheet");
+    },
+    // 获取歌名
+    getdetail(id) {
+      this.axios.get("/song/detail?ids=" + id).then(res => {
+        this.title = res.data.songs[0].name;
+      });
     }
   },
   mounted() {
     this.getword(this.$route.params.id);
-
+    this.getdetail(this.$route.params.id);
     let audio = document.getElementsByClassName("audio")[0];
     if (audio.paused == false) {
       this.$refs.iconfont.innerHTML = "&#xe68e;";
+    } else {
+      this.$refs.iconfont.innerHTML = "&#xe612;";
     }
-    const timer = setInterval(() => {
+    const timer = setInterval(() => { 
       this.setroll();
       this.playtime = this.$store.state.playtime;
-    }, 2000);
+    }, 1600);
     // 销毁
     this.$once("hook:beforeDestroy", () => {
       clearInterval(timer);
@@ -212,6 +223,9 @@ export default {
 };
 </script>
 <style scoped>
+.van-nav-bar__title {
+  color: red;
+}
 #songdetail {
   width: 100%;
   height: 100vh;

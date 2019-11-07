@@ -74,7 +74,7 @@ github地址[点击进入](https://github.com/yqxshiki/music)
 
 **在多个组件内部我使用了动画 Animate.css**,请自行体验
 
-这个项目中,顺序播放都没有实现,除此之外，我把我能实现的都实现了,后续有时间可以继续增加功能.
+这个项目中,我把我能实现的都实现了,后续有时间可以继续增加功能.
 
 整个项目中多次使用了播放事件,我就用[**provide/inject**](https://cn.vuejs.org/v2/api/#provide-inject)来实现多次调用，在App.vue页面中实现playaudio事件
 
