@@ -8,7 +8,7 @@
 
 个人博客[点击进入](https://www.yqxshiki.com/)
 
-项目运行地址[点击进入](http://49.232.96.54:3030)
+项目运行地址[点击进入](http://yqxshiki.xyz:3030)
 
 github地址[点击进入](https://github.com/yqxshiki/music)
 >如果你觉得还行,希望你给我点个star
