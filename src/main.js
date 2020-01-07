@@ -8,7 +8,7 @@ Vue.use(store)
 import axios from 'axios'
 Vue.prototype.axios = axios;
 // axios.defaults.baseURL = "xxxxx";  //这里使用自己下载的网易云接口地址
-axios.defaults.baseURL = "http://localhost:5000/";
+axios.defaults.baseURL = "http://localhost:3000/";
 // 引入Vant
 import Vant from 'vant'
 import 'vant/lib/index.css';

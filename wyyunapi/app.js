@@ -33,7 +33,6 @@ app.use((req, res, next) => {
   }
   req.method === 'OPTIONS' ? res.status(204).end() : next()
 })
-app.use('/', express.static(__dirname + '/public/web'));
 
 // cookie parser
 app.use((req, res, next) => {
@@ -53,7 +52,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cache('2 minutes', ((req, res) => res.statusCode === 200)))
 
 // static
-// app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')))
 
 // router
 const special = {
@@ -84,7 +83,7 @@ fs.readdirSync(path.join(__dirname, 'module')).reverse().forEach(file => {
   })
 })
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 3000
 
 app.server = app.listen(port, () => {
   console.log(`server running @ http://localhost:${port}`)
