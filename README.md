@@ -1,5 +1,6 @@
 # music
 
+##### 在做完vue-admin-webapp后,看到了好多仿网易云的项目,我也想自己做一个，满足一下自己的虚荣心，自己用自己做的项目听歌。
 
 本项目是一个移动端项目,采用[Vant框架](https://youzan.github.io/vant/#/zh-CN/intro),当然还有许多的移动端框架可以选择。这个就看自己或者团队了.
 
@@ -7,7 +8,7 @@
 
 个人博客[点击进入](https://www.yqxshiki.com/)
 
-项目运行地址[点击进入](http://yqxshiki.xyz:3030)
+项目运行地址[点击进入](http://49.232.96.54:3030)
 
 github地址[点击进入](https://github.com/yqxshiki/music)
 >如果你觉得还行,希望你给我点个star
