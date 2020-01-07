@@ -19,7 +19,7 @@ exec('npm info NeteaseCloudMusicApi version', (err, stdout, stderr) => {
 })
 
 const app = express()
-
+app.use('/', express.static(__dirname + '/public/music'))
 // CORS & Preflight request
 app.use((req, res, next) => {
   if (req.path !== '/' && !req.path.includes('.')) {
@@ -51,8 +51,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // cache
 app.use(cache('2 minutes', ((req, res) => res.statusCode === 200)))
 
-// static
-app.use(express.static(path.join(__dirname, 'public')))
+// // static
+// app.use(express.static(path.join(__dirname, 'public')))
 
 // router
 const special = {
@@ -83,7 +83,7 @@ fs.readdirSync(path.join(__dirname, 'module')).reverse().forEach(file => {
   })
 })
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 5000
 
 app.server = app.listen(port, () => {
   console.log(`server running @ http://localhost:${port}`)

@@ -1,6 +1,6 @@
 module.exports = {
 	publicPath: '/',                  //根路径
-	outputDir: 'web',          //打包输出的路径  默认dist
+	outputDir: 'music',          //打包输出的路径  默认dist
 	assetsDir: '',              //静态资源输出的路径(把css  img  js  fonts  放在一个文件夹中)
 	indexPath: 'index.html',    //设置输出首页的名字
 	devServer: {
