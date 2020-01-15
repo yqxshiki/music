@@ -23,7 +23,7 @@
           </router-link>
         </van-col>
         <van-col span="8">
-          <img :src="item.iconUrl" alt class="iconurl" />
+          <img v-lazy="item.iconUrl" alt class="iconurl" />
         </van-col>
       </van-row>
     </div>

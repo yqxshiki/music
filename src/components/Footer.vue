@@ -3,7 +3,7 @@
     <div class="wrap">
       <div class="image">
         <router-link :to="'/songdetail/'+detail.id">
-          <img :src="imgurl.picUrl" ref="img" alt />
+          <img v-lazy="imgurl.picUrl" ref="img" alt />
         </router-link>
       </div>
       <div class="geming" ref="name">{{detail.name}}</div>

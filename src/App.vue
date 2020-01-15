@@ -2,7 +2,10 @@
   <div id="app">
     <appfooter v-if="showfooter" />
     <audio class="audio" ref="audio" @timeupdate="onTimeupdate" @loadedmetadata="onLoadedmetadata"></audio>
-    <router-view v-if="isShow"></router-view>
+
+    <keep-alive>
+      <router-view v-if="isShow"></router-view>
+    </keep-alive>
   </div>
 </template>
 
@@ -55,7 +58,7 @@ export default {
           setTimeout(() => {
             this.iffooter();
             this.reload();
-          },600);
+          }, 600);
         }, 1000);
       }
     },

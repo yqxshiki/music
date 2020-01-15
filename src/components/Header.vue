@@ -30,7 +30,9 @@
       </van-row>
     </div>
     <div class="cover">
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
   </div>
 </template>

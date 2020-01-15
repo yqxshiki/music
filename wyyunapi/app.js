@@ -19,7 +19,9 @@ exec('npm info NeteaseCloudMusicApi version', (err, stdout, stderr) => {
 })
 
 const app = express()
-// app.use('/', express.static(__dirname + '/public/music'))
+
+app.use('/', express.static(__dirname + '/public/music'))
+
 // CORS & Preflight request
 app.use((req, res, next) => {
   if (req.path !== '/' && !req.path.includes('.')) {
